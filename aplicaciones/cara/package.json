@@ -1,0 +1,20 @@
+{
+  "name": "cara",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "ver": "vite",
+    "armar": "vite build",
+    "probar": "vite build && vite preview",
+    "revisar": "prettier --check .",
+    "revisar:arreglar": "prettier --write --list-different ."
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.16",
+    "cssnano": "^6.0.1",
+    "postcss": "^8.4.32",
+    "sass": "^1.69.5",
+    "vite": "^5.0.4"
+  }
+}

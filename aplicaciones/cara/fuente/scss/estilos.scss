@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Kalnia:wght@300;500&display=swap');
+
+html {
+  box-sizing: border-box;
+  height: 100%;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --fondoTransparentoso: #feffd4e5;
+}
+
+body {
+  font-family: 'Kalnia', serif;
+  color: rgb(0, 0, 0);
+  font-weight: 500;
+}
+
+main {
+  display: flex;
+
+  .columna {
+    flex-basis: 33.33%;
+  }
+}
+
+h1 {
+  font-size: 3em;
+  background-color: var(--fondoTransparentoso);
+  border: 6px dotted;
+  display: inline-block;
+  padding: 0.5em 1em 0.5em 0.2em;
+  margin: 0;
+  font-weight: 300;
+}
+
+::selection {
+  background-color: #30cac073;
+  color: #130808;
+}
+
+#fotomatica {
+  width: 20vw;
+  height: 50vh;
+  background-color: var(--fondoTransparentoso);
+  border: 6px dotted;
+  margin-top: 1em;
+  padding: 1em;
+}
+
+#fondo {
+  position: absolute;
+  display: inline-block;
+  vertical-align: top;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background-color: rgb(249, 249, 179);
+}
