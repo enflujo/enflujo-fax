@@ -1,4 +1,4 @@
-import { DOSPI } from './utilidades/constantes';
+import { DOS_PI } from './utilidades/constantes';
 
 export default class Pepa {
   x: number;
@@ -19,7 +19,7 @@ export default class Pepa {
     const radio = this.radio;
 
     ctx.beginPath();
-    ctx.arc(this.x, this.y, radio, 0, DOSPI);
+    ctx.arc(this.x, this.y, radio, 0, DOS_PI);
     ctx.fill();
 
     if (this.sentido > 0 && radio >= 8) {

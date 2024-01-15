@@ -11,21 +11,11 @@ export default () => {
           const img = new Image();
           img.onload = () => {
             document.body.dispatchEvent(new CustomEvent('nuevaImagen', { detail: { img } }));
-            // ctx.drawImage(img, 0, 0);
           };
           img.src = lectorImg.result as string;
         }
       };
       lectorImg.readAsDataURL(archivos[0]);
-      // const datosImg = new FormData();
-      // datosImg.append('foto', archivos[0]);
-      // const respuesta = await fetch('http://localhost:8000', {
-      //   method: 'post',
-      //   headers: {},
-      //   body: datosImg,
-      // });
-
-      // console.log(await respuesta.json());
     }
   };
 };

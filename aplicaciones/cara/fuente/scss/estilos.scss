@@ -25,22 +25,39 @@ body {
   font-family: 'Kalnia', serif;
   color: rgb(0, 0, 0);
   font-weight: 500;
+  height: 100%;
 }
 
-main {
-  display: flex;
+footer {
+  height: 50px;
+  text-align: center;
+  display: block;
+  width: 100%;
+  background-color: #130808;
+  color: yellow;
+}
 
-  .columna {
-    flex-basis: 33.33%;
+.marco {
+  border: 6px dotted;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 2em;
+
+  .subtitulo {
+    margin: 0 auto;
+    writing-mode: vertical-lr;
+    text-orientation: upright;
+    text-align: center;
+    height: 195px;
+    letter-spacing: -6px;
   }
 }
 
 h1 {
-  font-size: 3em;
-  background-color: var(--fondoTransparentoso);
-  border: 6px dotted;
-  display: inline-block;
-  padding: 0.5em 1em 0.5em 0.2em;
+  font-size: 4em;
+  padding: 0.2em 0.3em 0.1em 0.3em;
   margin: 0;
   font-weight: 300;
 }
@@ -51,16 +68,28 @@ h1 {
 }
 
 #fotomatica {
-  width: 20vw;
-  height: 50vh;
   background-color: var(--fondoTransparentoso);
   border: 6px dotted;
-  margin-top: 1em;
+  padding: 1em;
+  width: 60vw;
+  text-align: center;
+  margin: 0 auto;
+
+  .mensajeBuzon {
+    width: 100%;
+
+    height: 100%;
+    display: block;
+  }
+}
+
+#buzon {
+  border: 0;
   padding: 1em;
 }
 
 #fondo {
-  position: absolute;
+  position: fixed;
   display: inline-block;
   vertical-align: top;
   width: 100vw;
@@ -69,4 +98,55 @@ h1 {
   left: 0;
   z-index: -1;
   background-color: rgb(249, 249, 179);
+}
+
+#lienzo {
+  color: rgb(240, 240, 65);
+  background-color: var(--fondoTransparentoso);
+  display: block;
+  margin: 0 auto;
+}
+
+#contenedorImpresora {
+  right: 50px;
+  width: 40vw;
+
+  img {
+    position: sticky;
+    top: 1em;
+    width: 100%;
+    height: auto;
+  }
+}
+
+#contenedorEditor {
+  width: 95vw;
+  margin: 2em auto 3em auto;
+  background-color: var(--fondoTransparentoso);
+}
+
+#cargador {
+  width: 100%;
+  height: 1.5em;
+  background-color: #b8a3f1;
+  margin-bottom: 3px;
+  position: relative;
+
+  #proceso {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background-color: rgb(151, 201, 241);
+  }
+
+  #porcentaje {
+    position: absolute;
+    font-size: 0.9em;
+    left: 50%;
+    top: 0.1em;
+    transform: translateX(-50%);
+    z-index: 2;
+  }
 }

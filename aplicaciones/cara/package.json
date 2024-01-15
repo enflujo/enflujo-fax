@@ -4,17 +4,22 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "ver": "vite",
+    "ver": "vite --host",
     "armar": "vite build",
     "probar": "vite build && vite preview",
     "revisar": "prettier --check .",
     "revisar:arreglar": "prettier --write --list-different ."
   },
   "devDependencies": {
+    "@types/d3-delaunay": "^6.0.4",
     "autoprefixer": "^10.4.16",
-    "cssnano": "^6.0.1",
-    "postcss": "^8.4.32",
-    "sass": "^1.69.5",
-    "vite": "^5.0.4"
+    "cssnano": "^6.0.3",
+    "postcss": "^8.4.33",
+    "sass": "^1.69.7",
+    "vite": "^5.0.11"
+  },
+  "dependencies": {
+    "@enflujo/alquimia": "^2.0.0",
+    "d3-delaunay": "^6.0.4"
   }
 }

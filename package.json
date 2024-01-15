@@ -8,7 +8,9 @@
     "aplicaciones/*"
   ],
   "scripts": {
-    "prender": "concurrently \"yarn workspace cara ver\" \"yarn workspace culo ver\""
+    "prender": "concurrently \"yarn workspace cara ver\" \"yarn workspace culo ver\"",
+    "armar": "yarn workspace cara armar && yarn workspace culo armar",
+    "prender:servidor": "yarn workspace culo ver"
   },
   "dependencies": {},
   "devDependencies": {

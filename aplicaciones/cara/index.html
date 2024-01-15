@@ -37,18 +37,33 @@
   <body>
     <header>
       <h1>Esto es un Fax</h1>
+      <!-- <p class="subtitulo">
+        &#128570; <br />
+        . <br />
+        Pero sólo recibe imágenes <br />
+        ... <br />
+        Imágenes de animales y plantas <br />
+        . <br />
+        &#127793; <br />
+      </p> -->
     </header>
 
-    <main>
-      <div class="columna" id="fotomatica">
-        <p>Mandanos una foto</p>
-        <input type="file" id="buzon" />
+    <main id="contenedor">
+      <!-- <div id="contenedorImpresora" class="marco"><img src="https://muchachita.enflujo.com/" /></div> -->
+      <div id="fotomatica" class="marco">
+        <label for="buzon" class="mensajeBuzon">Mándanos una foto</label>
+        <input id="buzon" type="file" accept="image/*,capture=camera" name="buzon" />
       </div>
 
-      <div class="columna editor"><canvas id="lienzo"></canvas></div>
-      <div class="columna impresora"><img src="https://muchachita.enflujo.com/" /></div>
+      <div id="contenedorEditor">
+        <div id="cargador">
+          <span id="porcentaje">0%</span>
+          <span id="proceso"></span>
+        </div>
+        <canvas id="lienzo"></canvas>
+      </div>
     </main>
-    <footer>EnFlujo</footer>
+    <!-- <footer>EnFlujo</footer> -->
     <canvas id="fondo"></canvas>
     <script type="module" src="/fuente/programa.ts"></script>
   </body>

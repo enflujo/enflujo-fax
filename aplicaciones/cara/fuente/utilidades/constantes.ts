@@ -1,1 +1,1 @@
-export const DOSPI = Math.PI * 2;
+export const DOS_PI = Math.PI * 2;

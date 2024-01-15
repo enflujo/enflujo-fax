@@ -33,7 +33,7 @@ export default () => {
     lienzo.height = dims.alto = window.innerHeight;
     dims.columnas = Math.ceil(dims.ancho / cuadro);
     dims.filas = Math.ceil(dims.alto / cuadro);
-    ctx.fillStyle = 'rgb(26, 17, 26)';
+    ctx.fillStyle = 'rgb(240, 240, 65)';
     cantidadPepas = dims.columnas * dims.filas;
     pepas = [];
 
