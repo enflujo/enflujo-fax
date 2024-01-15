@@ -7,12 +7,9 @@
     "strict": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
-    "outDir": "../../servidor",
-    // "rootDir": "fuente",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["fuente/*"],
-      "@/tipos/*": ["../../tipos/*"]
+      "@/*": ["fuente/*"]
     }
   },
   "include": ["./fuente/**/*"],

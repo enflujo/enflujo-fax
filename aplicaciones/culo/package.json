@@ -4,17 +4,23 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "ver": "nodemon ./fuente/culito.ts"
+    "ver": "nodemon ./fuente/culito.ts",
+    "armar": "esbuild ./fuente/culito.ts --bundle --minify --platform=node --outfile=publico/programa.js",
+    "prender": "node publico/programa.js"
   },
   "devDependencies": {
-    "@types/node": "^20.10.4",
+    "@types/node": "^20.10.8",
+    "esbuild": "^0.19.11",
     "nodemon": "^3.0.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@fastify/cors": "^8.4.2",
-    "@fastify/multipart": "^8.0.0",
-    "fastify": "^4.25.0"
+    "@fastify/cors": "^8.5.0",
+    "@fastify/type-provider-typebox": "^4.0.0",
+    "@sinclair/typebox": "^0.32.8",
+    "fastify": "^4.25.2",
+    "mutable-buffer": "^4.0.2",
+    "usb": "^2.11.0"
   }
 }
