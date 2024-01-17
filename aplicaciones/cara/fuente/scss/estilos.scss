@@ -150,3 +150,12 @@ h1 {
     z-index: 2;
   }
 }
+
+#transmision {
+  width: 20vw;
+  margin: 0 auto;
+  img {
+    width: 20vw;
+    transform: rotate(180deg);
+  }
+}
