@@ -103,7 +103,7 @@ h1 {
 #lienzo {
   color: rgb(240, 240, 65);
   background-color: var(--fondoTransparentoso);
-  display: block;
+  display: none;
   margin: 0 auto;
 }
 
@@ -151,11 +151,27 @@ h1 {
   }
 }
 
-#transmision {
-  width: 20vw;
+#contenedorTransmision {
+  width: 10vw;
   margin: 0 auto;
-  img {
-    width: 20vw;
+  position: fixed;
+  top: 15px;
+  right: 10px;
+
+  #transmision {
     transform: rotate(180deg);
+    width: 10vw;
+  }
+}
+#botonImprimir {
+  display: none;
+  margin: 1em auto;
+  width: fit-content;
+  background-color: coral;
+  padding: 0.5em;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #b8a3f1;
   }
 }

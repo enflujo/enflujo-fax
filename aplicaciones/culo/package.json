@@ -21,6 +21,7 @@
     "@sinclair/typebox": "^0.32.8",
     "fastify": "^4.25.2",
     "mutable-buffer": "^4.0.2",
+    "sqlite3": "^5.1.7",
     "usb": "^2.11.0"
   }
 }

@@ -1,6 +1,10 @@
 export default () => {
   const buzon = document.getElementById('buzon') as HTMLInputElement;
+  const lienzo = document.getElementById('lienzo') as HTMLCanvasElement;
+  const botonImprimir = document.getElementById('botonImprimir') as HTMLDivElement;
+
   buzon.onchange = async (evento) => {
+    botonImprimir.style.display = 'none';
     const archivos = (evento.target as HTMLInputElement).files;
 
     if (archivos?.length) {
@@ -17,5 +21,6 @@ export default () => {
       };
       lectorImg.readAsDataURL(archivos[0]);
     }
+    lienzo.style.display = 'block';
   };
 };

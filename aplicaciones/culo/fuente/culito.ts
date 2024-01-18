@@ -5,6 +5,7 @@ import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { buscarImpresora, conectar } from './ayudas';
 import Imagen from './Imagen';
 import { Impresora } from './Impresora';
+import sqlite3 from 'sqlite3';
 
 export const Foto = Type.Object({
   img: Type.Array(Type.Boolean()),
@@ -60,4 +61,12 @@ aplicacion.post<{ Body: TFoto }>(
 aplicacion.listen({ port: puerto }, (error, direccion) => {
   if (error) throw error;
   console.log('servidor en', direccion);
+});
+
+// Guardar datos en base de datos
+const bd = new sqlite3.Database(':memory:', (err) => {
+  if (err) {
+    return console.error(err.message);
+  }
+  console.log('Conectada con la base de datos SQlite 🚀');
 });

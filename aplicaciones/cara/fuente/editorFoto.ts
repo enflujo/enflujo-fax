@@ -7,6 +7,11 @@ export default () => {
   const ctx = lienzo.getContext('2d') as CanvasRenderingContext2D;
   const proceso = document.getElementById('proceso') as HTMLSpanElement;
   const valorPorcentaje = document.getElementById('porcentaje') as HTMLSpanElement;
+  const botonImprimir = document.getElementById('botonImprimir') as HTMLDivElement;
+  const contenedorTransmision = document.getElementById('contenedorTransmision') as HTMLDivElement;
+  const transmision = document.getElementById('transmision') as HTMLDivElement;
+  const fotomatica = document.getElementById('fotomatica') as HTMLDivElement;
+  const contenedorEditor = document.getElementById('contenedorEditor') as HTMLDivElement;
 
   document.body.addEventListener('nuevaImagen', (evento: CustomEventInit<{ img: HTMLImageElement }>) => {
     if (!evento.detail) return;
@@ -149,13 +154,49 @@ export default () => {
         datos.push(a != 0 && r < corte && g < corte && b < corte);
       }
 
-      fetch('https://fax-tally.enflujo.com', {
-        method: 'POST',
-        headers: { 'Content-type': 'application/json' },
-        body: JSON.stringify({ img: datos, fecha: new Date(), ancho, alto }),
-      }).then((res) => {
-        console.log(res);
+      mostrarBotonImprimir();
+
+      // Imprimir la imagen cuando se haga clic en el botón
+      botonImprimir.addEventListener('click', function () {
+        console.log(botonImprimir.innerText);
+
+        if (botonImprimir.innerText === 'Imprimir') {
+          transmitirImpresion();
+
+          fetch('https://fax-tally.enflujo.com', {
+            method: 'POST',
+            headers: { 'Content-type': 'application/json' },
+            body: JSON.stringify({ img: datos, fecha: new Date(), ancho, alto }),
+          }).then((res) => {
+            console.log(res);
+            botonImprimir.innerText = 'Volver';
+          });
+        } else {
+          ocultarImpresion();
+        }
       });
+    }
+
+    function mostrarBotonImprimir() {
+      botonImprimir.style.display = 'block';
+    }
+
+    function transmitirImpresion() {
+      fotomatica.style.display = 'none';
+      contenedorEditor.style.display = 'none';
+      contenedorTransmision.style.width = '50vw';
+      contenedorTransmision.style.position = 'unset';
+      transmision.style.width = '50vw';
+    }
+
+    function ocultarImpresion() {
+      contenedorTransmision.style.width = '10vw';
+      contenedorTransmision.style.position = 'fixed';
+      transmision.style.width = '10vw';
+      fotomatica.style.display = 'block';
+      contenedorEditor.style.display = 'block';
+      botonImprimir.style.display = 'none';
+      botonImprimir.innerText = 'Imprimir';
     }
   });
 };
