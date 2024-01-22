@@ -4,7 +4,7 @@ export default () => {
   const botonImprimir = document.getElementById('botonImprimir') as HTMLDivElement;
 
   buzon.onchange = async (evento) => {
-    botonImprimir.style.display = 'none';
+    botonImprimir.classList.add('oculto');
     const archivos = (evento.target as HTMLInputElement).files;
 
     if (archivos?.length) {

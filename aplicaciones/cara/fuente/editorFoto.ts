@@ -158,8 +158,6 @@ export default () => {
 
       // Imprimir la imagen cuando se haga clic en el botón
       botonImprimir.addEventListener('click', function () {
-        console.log(botonImprimir.innerText);
-
         if (botonImprimir.innerText === 'Imprimir') {
           transmitirImpresion();
 
@@ -178,24 +176,22 @@ export default () => {
     }
 
     function mostrarBotonImprimir() {
-      botonImprimir.style.display = 'block';
+      botonImprimir.classList.remove('oculto');
     }
 
     function transmitirImpresion() {
-      fotomatica.style.display = 'none';
-      contenedorEditor.style.display = 'none';
-      contenedorTransmision.style.width = '50vw';
-      contenedorTransmision.style.position = 'unset';
-      transmision.style.width = '50vw';
+      fotomatica.classList.add('oculta');
+      contenedorEditor.classList.add('oculto');
+      contenedorTransmision.classList.add('transmitiendo');
+      transmision.classList.add('transmitiendo');
     }
 
     function ocultarImpresion() {
-      contenedorTransmision.style.width = '10vw';
-      contenedorTransmision.style.position = 'fixed';
-      transmision.style.width = '10vw';
-      fotomatica.style.display = 'block';
-      contenedorEditor.style.display = 'block';
-      botonImprimir.style.display = 'none';
+      fotomatica.classList.remove('oculta');
+      contenedorEditor.classList.remove('oculto');
+      contenedorTransmision.classList.remove('transmitiendo');
+      transmision.classList.remove('transmitiendo');
+      botonImprimir.classList.add('oculto');
       botonImprimir.innerText = 'Imprimir';
     }
   });

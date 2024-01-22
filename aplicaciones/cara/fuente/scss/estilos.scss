@@ -74,12 +74,16 @@ h1 {
   width: 60vw;
   text-align: center;
   margin: 0 auto;
+  display: block;
 
   .mensajeBuzon {
     width: 100%;
-
     height: 100%;
     display: block;
+  }
+
+  &.oculta {
+    display: none;
   }
 }
 
@@ -123,6 +127,11 @@ h1 {
   width: 95vw;
   margin: 2em auto 3em auto;
   background-color: var(--fondoTransparentoso);
+  display: block;
+
+  &.oculto {
+    display: none;
+  }
 }
 
 #cargador {
@@ -161,15 +170,28 @@ h1 {
   #transmision {
     transform: rotate(180deg);
     width: 10vw;
+    &.transmitiendo {
+      width: 50vw;
+    }
+  }
+
+  &.transmitiendo {
+    width: 50vw;
+    position: unset;
   }
 }
+
 #botonImprimir {
-  display: none;
   margin: 1em auto;
   width: fit-content;
   background-color: coral;
   padding: 0.5em;
   cursor: pointer;
+  display: block;
+
+  &.oculto {
+    display: none;
+  }
 
   &:hover {
     background-color: #b8a3f1;
