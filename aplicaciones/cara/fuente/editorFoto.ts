@@ -157,7 +157,7 @@ export default () => {
       mostrarBotonImprimir();
 
       // Imprimir la imagen cuando se haga clic en el botón
-      botonImprimir.addEventListener('click', function () {
+      botonImprimir.onclick = () => {
         if (botonImprimir.innerText === 'Imprimir') {
           transmitirImpresion();
 
@@ -165,14 +165,13 @@ export default () => {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({ img: datos, fecha: new Date(), ancho, alto }),
-          }).then((res) => {
-            console.log(res);
+          }).then(() => {
             botonImprimir.innerText = 'Volver';
           });
         } else {
           ocultarImpresion();
         }
-      });
+      };
     }
 
     function mostrarBotonImprimir() {
