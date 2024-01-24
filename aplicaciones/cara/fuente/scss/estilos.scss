@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kalnia:wght@300;500&display=swap');
+@import './constantes';
 
 html {
   box-sizing: border-box;
@@ -22,23 +22,14 @@ body {
 }
 
 body {
-  font-family: 'Kalnia', serif;
+  font-family: 'Satoshi', sans-serif;
   color: rgb(0, 0, 0);
   font-weight: 500;
   height: 100%;
 }
 
-footer {
-  height: 50px;
-  text-align: center;
-  display: block;
-  width: 100%;
-  background-color: #130808;
-  color: yellow;
-}
-
 .marco {
-  border: 6px dotted;
+  border: 5px dotted;
 }
 
 header {
@@ -56,10 +47,11 @@ header {
 }
 
 h1 {
-  font-size: 4em;
-  padding: 0.2em 0.3em 0.1em 0.3em;
+  font-family: 'Array', sans-serif;
+  font-size: 4.5em;
+  padding: 1em 0.5em 0.1em 0.5em;
   margin: 0;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 ::selection {
@@ -69,9 +61,9 @@ h1 {
 
 #fotomatica {
   background-color: var(--fondoTransparentoso);
-  border: 6px dotted;
-  padding: 1em;
-  width: 60vw;
+  border: 5px dotted;
+  padding: 2em;
+  width: 95vw;
   text-align: center;
   margin: 0 auto;
   display: block;
@@ -89,7 +81,8 @@ h1 {
 
 #buzon {
   border: 0;
-  padding: 1em;
+  padding: 2em 0em 1em 0em;
+  width: 90%;
 }
 
 #fondo {
@@ -195,5 +188,25 @@ h1 {
 
   &:hover {
     background-color: #b8a3f1;
+  }
+}
+
+@media screen and (min-width: $corte1) {
+  #buzon {
+    border: 0;
+    padding: 2em 2em 1em 0em;
+    width: 60%;
+  }
+}
+
+@media screen and (min-width: $corte2) {
+  #buzon {
+    border: 0;
+    padding: 2em 1em 1em 1em;
+    width: auto;
+  }
+
+  #fotomatica {
+    width: 60vw;
   }
 }
