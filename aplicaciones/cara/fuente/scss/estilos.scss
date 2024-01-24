@@ -63,7 +63,7 @@ h1 {
   background-color: var(--fondoTransparentoso);
   border: 5px dotted;
   padding: 2em;
-  width: 60vw;
+  width: 95vw;
   text-align: center;
   margin: 0 auto;
 
@@ -156,5 +156,9 @@ h1 {
     border: 0;
     padding: 2em 1em 1em 1em;
     width: auto;
+  }
+
+  #fotomatica {
+    width: 60vw;
   }
 }
