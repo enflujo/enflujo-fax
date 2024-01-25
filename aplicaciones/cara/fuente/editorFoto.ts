@@ -4,6 +4,7 @@ import { DOS_PI } from './utilidades/constantes';
 
 export default () => {
   const lienzo = document.getElementById('lienzo') as HTMLCanvasElement;
+  const lienzoProcesada = document.getElementById('lienzoProcesada') as HTMLCanvasElement;
   const ctx = lienzo.getContext('2d') as CanvasRenderingContext2D;
   const proceso = document.getElementById('proceso') as HTMLSpanElement;
   const valorPorcentaje = document.getElementById('porcentaje') as HTMLSpanElement;
@@ -154,6 +155,8 @@ export default () => {
         datos.push(a != 0 && r < corte && g < corte && b < corte);
       }
 
+      reconstruirImagen(datos, alto);
+
       mostrarBotonImprimir();
 
       // Imprimir la imagen cuando se haga clic en el botón
@@ -170,6 +173,65 @@ export default () => {
           ocultarImpresion();
         }
       };
+    }
+
+    function reconstruirImagen(datos, alto) {
+      const ancho = 380;
+
+      let contexto = lienzoProcesada.getContext('2d');
+      let datosImagen = contexto.createImageData(ancho, alto);
+
+      lienzoProcesada.height = alto;
+      lienzoProcesada.width = ancho;
+
+      //////////////77
+
+      let buffer = new Uint8ClampedArray(datos.length);
+
+      //for (var i = 0; i < datos.length; i += 4) {
+
+      for (var x = 0; x < ancho / 4; x++) {
+        for (var y = 0; y < alto / 4; y++) {
+          var i = (y * ancho + x) * 4;
+
+          buffer[i] = datos[i] ? 0 : 255; // R
+          buffer[i + 1] = datos[i + 1] ? 0 : 255; // G
+          buffer[i + 2] = datos[i + 2] ? 0 : 255; // B
+          buffer[i + 3] = 255;
+        } // position in buffer based on x and y
+      }
+      ///////////////7
+
+      // fill imgData with colors from array
+      // for (var i = 0; i < datos.length; i += 4) {
+      //   // Convert pixels[i] to RGB
+      //   // See http://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+
+      //   const r = datos[i] ? 255 : 0;
+      //   const g = datos[i + 1] ? 255 : 0;
+      //   const b = datos[i + 2] ? 255 : 0;
+      //   const a = 255;
+
+      //   datosImagen[i] = r;
+      //   datosImagen[i + 1] = g;
+      //   datosImagen[i + 2] = b;
+      //   datosImagen[i + 3] = a; // Alpha channel
+      // }
+
+      datosImagen.data.set(buffer);
+
+      console.log(datos);
+      console.log(datosImagen);
+
+      // put data to context at (0, 0)
+      contexto.putImageData(datosImagen, 0, 0);
+
+      // output image
+      // var img = new Image();
+      // img.src = lienzoProcesada.toDataURL('image/png');
+
+      // add image to body (or whatever you want to do)
+      // document.body.appendChild(img);
     }
 
     function mostrarBotonImprimir() {

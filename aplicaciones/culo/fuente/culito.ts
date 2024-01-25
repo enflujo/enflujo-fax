@@ -47,6 +47,10 @@ aplicacion.post<{ Body: TFoto }>(
         await impresora.alineacion('centrado').imagen(imagen, 'd24');
         impresora.cut();
         await impresora.desconectar();
+        const fechaServidor = new Date();
+
+        console.log(fechaServidor);
+        console.log('fecha usuario: ', fecha);
       } else {
         console.error('No se conectó a la impresora');
       }
