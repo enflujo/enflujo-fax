@@ -17,9 +17,10 @@ export default () => {
     if (!evento.detail) return;
     const { img } = evento.detail;
     const anchoImg = 380;
-    const radio = 0.5;
-    const densidad = 4;
+    const radio = 1;
+    const densidad = 14;
     const pasos = 80;
+    const corte = 200;
     let ancho = 0;
     let alto = 0;
     const pasoPorcentaje = 100 / pasos;
@@ -66,7 +67,7 @@ export default () => {
     const c = new Float64Array(n * 2);
     const s = new Float64Array(n);
 
-    // Iniciar puntos con "rejection sampling"
+    // Iniciar puntos con "rejection sampling"200
     for (let i = 0; i < n; ++i) {
       for (let j = 0; j < 30; ++j) {
         const x = (puntos[i * 2] = Math.floor(Math.random() * ancho));
@@ -143,7 +144,6 @@ export default () => {
     }
 
     function fin() {
-      const corte = 200;
       const { data: pixeles } = ctx.getImageData(0, 0, ancho, alto);
       const datos: boolean[] = [];
       for (let i = 0; i < pixeles.length; i += 4) {
@@ -165,9 +165,7 @@ export default () => {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({ img: datos, fecha: new Date(), ancho, alto }),
-          }).then(() => {
-            botonImprimir.innerText = 'Volver';
-          });
+          }).then(() => {});
         } else {
           ocultarImpresion();
         }
@@ -183,6 +181,7 @@ export default () => {
       contenedorEditor.classList.add('oculto');
       contenedorTransmision.classList.add('transmitiendo');
       transmision.classList.add('transmitiendo');
+      botonImprimir.innerText = 'Volver';
     }
 
     function ocultarImpresion() {
