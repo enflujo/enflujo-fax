@@ -1,5 +1,58 @@
 @import './constantes';
 
+@font-face {
+  src:
+    url('/fuente/fuentes/LabDJRColorVariable[SIZE,BEVL,OVAL,SPRK,QUAD,XSWP,YSWP].woff2') format('woff2'),
+    url('/fuentes/LabDJRColorVariable[SIZE,BEVL,OVAL,SPRK,QUAD,XSWP,YSWP].woff') format('woff');
+  font-family: 'Lab DJR Web';
+  font-style: normal;
+  font-weight: normal;
+}
+
+@font-palette-values --negroLetra {
+  font-family: 'Lab DJR web';
+  base-palette: 3;
+}
+
+@font-palette-values --bn {
+  font-family: 'Lab DJR Web';
+  override-colors:
+    0 #000000,
+    1 #000000,
+    2 #000000,
+    3 #0a0b0b,
+    4 #0a0a0a,
+    5 #0a0a0a,
+    6 #0a0a0a,
+    7 #000000;
+}
+
+@font-palette-values --bn2 {
+  font-family: 'Lab DJR Web';
+  override-colors:
+    0 #000000,
+    1 #000000,
+    2 #000000,
+    3 #000000,
+    4 #000000,
+    5 #000000,
+    6 #000000,
+    7 #ff006e;
+}
+
+@font-palette-values --colorines {
+  font-family: 'Lab DJR Web';
+  override-colors:
+    0 #feedf5,
+    1 #f64a8a,
+    2 #fd89c8,
+    3 #f987c5,
+    4 #fe7f9c,
+    5 #df5286,
+    6 #ff6fff,
+    7 #ffa6c9;
+}
+
 html {
   box-sizing: border-box;
   height: 100%;
@@ -18,14 +71,13 @@ body {
 }
 
 :root {
-  --fondoTransparentoso: #feffd4e5;
+  --fondoTransparentoso: #f1f1f1aa;
 }
 
 body {
   font-family: 'Satoshi', sans-serif;
   color: rgb(0, 0, 0);
   font-weight: 500;
-  height: 100%;
 }
 
 .marco {
@@ -47,15 +99,37 @@ header {
 }
 
 h1 {
-  font-family: 'Array', sans-serif;
-  font-size: 4.5em;
-  padding: 1em 0.5em 0.1em 0.5em;
+  font-family: 'Lab DJR Web';
+  font-size: 2.75em;
+  padding: 50vh 0.8em 0.1em 0.8em;
   margin: 0;
-  font-weight: 400;
+
+  font-variation-settings:
+    'SIZE' 90,
+    'OVAL' 60,
+    'QUAD' 0,
+    'SPRK' 0,
+    'XSWP' 0,
+    'YSWP' 0;
+
+  font-palette: --bn;
+  transition: all 0.5s ease 0s;
+
+  &:hover {
+    font-variation-settings:
+      'SIZE' 70,
+      'OVAL' 40,
+      'QUAD' 100,
+      'SPRK' 0,
+      'XSWP' 0,
+      'YSWP' 0;
+
+    font-palette: --bn2;
+  }
 }
 
 ::selection {
-  background-color: #30cac073;
+  background-color: #1eff0073;
   color: #130808;
 }
 
@@ -94,7 +168,7 @@ h1 {
   top: 0;
   left: 0;
   z-index: -1;
-  background-color: rgb(249, 249, 179);
+  background-color: rgba(255, 255, 120, 1);
 }
 
 #lienzo {
@@ -130,7 +204,7 @@ h1 {
 #cargador {
   width: 100%;
   height: 1.5em;
-  background-color: #b8a3f1;
+  background-color: #c86bfa;
   margin-bottom: 3px;
   position: relative;
 
@@ -154,15 +228,15 @@ h1 {
 }
 
 #contenedorTransmision {
-  width: 10vw;
+  width: 100vw;
   margin: 0 auto;
+  padding: 0vw 0vw;
   position: fixed;
-  top: 15px;
-  right: 10px;
+  top: 0px;
 
   #transmision {
     transform: rotate(180deg);
-    width: 10vw;
+    width: 100vw;
     &.transmitiendo {
       width: 50vw;
     }
@@ -192,6 +266,27 @@ h1 {
 }
 
 @media screen and (min-width: $corte1) {
+  #contenedorTransmision {
+    width: 60vw;
+    margin: 0 auto;
+    padding: 0vw 20vw;
+    position: fixed;
+    top: 0px;
+
+    #transmision {
+      transform: rotate(180deg);
+      width: 60vw;
+      &.transmitiendo {
+        width: 50vw;
+      }
+    }
+
+    &.transmitiendo {
+      width: 50vw;
+      position: unset;
+    }
+  }
+
   #buzon {
     border: 0;
     padding: 2em 2em 1em 0em;
@@ -200,6 +295,35 @@ h1 {
 }
 
 @media screen and (min-width: $corte2) {
+  h1 {
+    font-family: 'Lab DJR Web';
+    font-size: 5.5em;
+    padding: 1em 0.5em 0.1em 0.5em;
+    margin: 0;
+
+    font-variation-settings:
+      'SIZE' 90,
+      'OVAL' 60,
+      'QUAD' 0,
+      'SPRK' 0,
+      'XSWP' 0,
+      'YSWP' 0;
+
+    font-palette: --bn;
+    transition: all 0.5s ease 0s;
+
+    &:hover {
+      font-variation-settings:
+        'SIZE' 70,
+        'OVAL' 40,
+        'QUAD' 100,
+        'SPRK' 0,
+        'XSWP' 0,
+        'YSWP' 0;
+
+      font-palette: --bn2;
+    }
+  }
   #buzon {
     border: 0;
     padding: 2em 1em 1em 1em;
@@ -208,5 +332,36 @@ h1 {
 
   #fotomatica {
     width: 60vw;
+  }
+
+  #contenedorTransmision {
+    width: 10vw;
+    margin: 0 auto;
+    padding: 0vw 10vw;
+    position: fixed;
+    top: 15px;
+    right: 10px;
+
+    #transmision {
+      transform: rotate(180deg);
+      width: 10vw;
+      &.transmitiendo {
+        width: 50vw;
+      }
+    }
+
+    &.transmitiendo {
+      width: 50vw;
+      position: unset;
+    }
+  }
+}
+
+@media screen and (min-width: $corte3) {
+  h1 {
+    font-family: 'Lab DJR Web';
+    font-size: 5.5em;
+    padding: 1em 0.5em 0.1em 0.5em;
+    margin: 0;
   }
 }
