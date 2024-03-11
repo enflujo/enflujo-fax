@@ -22,7 +22,7 @@ export default class Pepa {
     ctx.arc(this.x, this.y, radio, 0, DOS_PI);
     ctx.fill();
 
-    if (this.sentido > 0 && radio >= 8) {
+    if (this.sentido > 0 && radio >= 7) {
       this.sentido = -1;
     } else if (this.sentido < 0 && radio <= 1) {
       this.sentido = 1;

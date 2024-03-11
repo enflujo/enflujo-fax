@@ -71,7 +71,7 @@ body {
 }
 
 :root {
-  --fondoTransparentoso: #f1f1f1e5;
+  --fondoTransparentoso: #f1f1f1aa;
 }
 
 body {
@@ -168,7 +168,7 @@ h1 {
   top: 0;
   left: 0;
   z-index: -1;
-  background-color: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 120, 1);
 }
 
 #lienzo {
@@ -204,7 +204,7 @@ h1 {
 #cargador {
   width: 100%;
   height: 1.5em;
-  background-color: #b8a3f1;
+  background-color: #c86bfa;
   margin-bottom: 3px;
   position: relative;
 
@@ -354,5 +354,14 @@ h1 {
       width: 50vw;
       position: unset;
     }
+  }
+}
+
+@media screen and (min-width: $corte3) {
+  h1 {
+    font-family: 'Lab DJR Web';
+    font-size: 5.5em;
+    padding: 1em 0.5em 0.1em 0.5em;
+    margin: 0;
   }
 }
