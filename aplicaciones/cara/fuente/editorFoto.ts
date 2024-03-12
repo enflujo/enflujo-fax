@@ -17,8 +17,8 @@ export default () => {
     if (!evento.detail) return;
     const { img } = evento.detail;
     const anchoImg = 380;
-    const radio = 1;
-    const densidad = 14;
+    const radio = 0.9;
+    const densidad = 10;
     const pasos = 80;
     const corte = 200;
     let ancho = 0;
