@@ -172,7 +172,7 @@ h1 {
 }
 
 #lienzo {
-  color: rgb(240, 240, 65);
+  color: #f0f041;
   background-color: var(--fondoTransparentoso);
   display: none;
   margin: 0 auto;
@@ -193,7 +193,7 @@ h1 {
 #contenedorEditor {
   width: 95vw;
   margin: 2em auto 3em auto;
-  background-color: var(--fondoTransparentoso);
+  background-color: #c86bfa;
   display: block;
 
   &.oculto {
@@ -214,7 +214,7 @@ h1 {
     left: 0;
     width: 0;
     height: 100%;
-    background-color: rgb(151, 201, 241);
+    background-color: #57e2e5;
   }
 
   #porcentaje {
@@ -337,7 +337,7 @@ h1 {
   #contenedorTransmision {
     width: 10vw;
     margin: 0 auto;
-    padding: 0vw 10vw;
+    padding: 0vw;
     position: fixed;
     top: 15px;
     right: 10px;
