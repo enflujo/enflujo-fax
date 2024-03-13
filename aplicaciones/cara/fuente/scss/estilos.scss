@@ -251,7 +251,7 @@ h1 {
 #botonImprimir {
   margin: 1em auto;
   width: fit-content;
-  background-color: coral;
+  background-color: #ff6666;
   padding: 0.5em;
   cursor: pointer;
   display: block;
@@ -261,7 +261,7 @@ h1 {
   }
 
   &:hover {
-    background-color: #b8a3f1;
+    background-color: #57e2e5;
   }
 }
 
