@@ -1,4 +1,5 @@
 @import './constantes';
+@import './animaletra';
 
 @font-face {
   src:
@@ -105,14 +106,14 @@ h1 {
   margin: 0;
 
   font-variation-settings:
-    'SIZE' 90,
-    'OVAL' 60,
+    'SIZE' 0,
+    'OVAL' 0,
     'QUAD' 0,
     'SPRK' 0,
     'XSWP' 0,
     'YSWP' 0;
-
   font-palette: --bn;
+
   transition: all 0.5s ease 0s;
 
   &:hover {
@@ -123,7 +124,6 @@ h1 {
       'SPRK' 0,
       'XSWP' 0,
       'YSWP' 0;
-
     font-palette: --bn2;
   }
 }
@@ -134,7 +134,7 @@ h1 {
 }
 
 #fotomatica {
-  background-color: var(--fondoTransparentoso);
+  background-color: #ffefed68;
   border: 5px dotted;
   padding: 2em;
   width: 95vw;
@@ -172,7 +172,7 @@ h1 {
 }
 
 #lienzo {
-  color: rgb(240, 240, 65);
+  color: #f0f041;
   background-color: var(--fondoTransparentoso);
   display: none;
   margin: 0 auto;
@@ -193,7 +193,7 @@ h1 {
 #contenedorEditor {
   width: 95vw;
   margin: 2em auto 3em auto;
-  background-color: var(--fondoTransparentoso);
+  background-color: #c86bfa;
   display: block;
 
   &.oculto {
@@ -214,7 +214,7 @@ h1 {
     left: 0;
     width: 0;
     height: 100%;
-    background-color: rgb(151, 201, 241);
+    background-color: #57e2e5;
   }
 
   #porcentaje {
@@ -251,7 +251,7 @@ h1 {
 #botonImprimir {
   margin: 1em auto;
   width: fit-content;
-  background-color: coral;
+  background-color: #ff6666;
   padding: 0.5em;
   cursor: pointer;
   display: block;
@@ -261,7 +261,7 @@ h1 {
   }
 
   &:hover {
-    background-color: #b8a3f1;
+    background-color: #57e2e5;
   }
 }
 
@@ -337,7 +337,7 @@ h1 {
   #contenedorTransmision {
     width: 10vw;
     margin: 0 auto;
-    padding: 0vw 10vw;
+    padding: 0vw;
     position: fixed;
     top: 15px;
     right: 10px;
