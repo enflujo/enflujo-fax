@@ -126,6 +126,182 @@ h1 {
       'YSWP' 0;
     font-palette: --bn2;
   }
+
+  .letra1 {
+    animation: imprimeLetra1 8s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
+    @keyframes imprimeLetra1 {
+      0% {
+        font-variation-settings:
+          'SIZE' 0,
+          'OVAL' 40;
+      }
+
+      12% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+
+      35% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+
+      80% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+
+      100% {
+        font-variation-settings:
+          'SIZE' 0,
+          'OVAL' 40;
+      }
+    }
+  }
+
+  .letra2 {
+    animation: imprimeLetra2 8s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
+    @keyframes imprimeLetra2 {
+      0% {
+        font-variation-settings:
+          'SIZE' 0,
+          'OVAL' 40;
+      }
+
+      22% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+
+      35% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+
+      80% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+      100% {
+        font-variation-settings:
+          'SIZE' 0,
+          'OVAL' 40;
+      }
+    }
+  }
+
+  .letra3 {
+    animation: imprimeLetra3 8s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
+    @keyframes imprimeLetra3 {
+      0% {
+        font-variation-settings:
+          'SIZE' 0,
+          'OVAL' 40;
+      }
+
+      32% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+
+      45% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+
+      80% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+      100% {
+        font-variation-settings:
+          'SIZE' 0,
+          'OVAL' 40;
+      }
+    }
+  }
+
+  .letra4 {
+    animation: imprimeLetra4 8s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
+    @keyframes imprimeLetra4 {
+      0% {
+        font-variation-settings:
+          'SIZE' 0,
+          'OVAL' 40;
+      }
+
+      35% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+
+      50% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+
+      80% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40;
+      }
+      100% {
+        font-variation-settings:
+          'SIZE' 0,
+          'OVAL' 40;
+      }
+    }
+  }
+
+  .palabra2 {
+    animation: imprime2 4s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
+    @keyframes imprime2 {
+      0% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 0,
+          'YSWP' 50;
+      }
+
+      25% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40,
+          'YSWP' 0;
+      }
+
+      35% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40,
+          'YSWP' 0;
+      }
+      95% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40,
+          'YSWP' 0;
+      }
+
+      100% {
+        font-variation-settings:
+          'SIZE' 90,
+          'OVAL' 40,
+          'YSWP' -50;
+      }
+    }
+  }
 }
 
 ::selection {
