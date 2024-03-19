@@ -55,11 +55,11 @@ export class Impresora {
     this.width = opciones.width ?? 48;
   }
 
-  async imagen(imagen: Imagen, denisdad: DensidadMapaBits = 'd24') {
+  async imagen(imagen: Imagen, densidad: DensidadMapaBits = 'd24') {
     if (!(imagen instanceof Imagen)) throw new TypeError('Only escpos.Image supported');
-    const n = !!~['D8', 'S8'].indexOf(denisdad.toUpperCase()) ? 1 : 3;
-    const header = BITMAP_FORMAT[denisdad];
-    const bitmap = imagen.toBitmap(n * 8);
+    const n = !!~['D8', 'S8'].indexOf(densidad.toUpperCase()) ? 1 : 3;
+    const header = BITMAP_FORMAT[densidad];
+    const bitmap = imagen.toBitmap(n * 4);
 
     this.espacioEntreLinea(0);
 
