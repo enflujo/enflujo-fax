@@ -19,6 +19,7 @@
     "@fastify/cors": "^8.5.0",
     "@fastify/type-provider-typebox": "^4.0.0",
     "@sinclair/typebox": "^0.32.12",
+    "esc-pos-encoder": "^2.0.4",
     "fastify": "^4.25.2",
     "mutable-buffer": "^4.0.2",
     "sqlite3": "^5.1.7",

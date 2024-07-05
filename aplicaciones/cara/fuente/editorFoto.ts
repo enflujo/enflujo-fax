@@ -16,7 +16,7 @@ export default () => {
   document.body.addEventListener('nuevaImagen', (evento: CustomEventInit<{ img: HTMLImageElement }>) => {
     if (!evento.detail) return;
     const { img } = evento.detail;
-    const anchoImg = 380;
+    const anchoImg = 568; // para la impresora de 58mm: 384px, para la de 80mm: 568px
     const radio = 0.9;
     const densidad = 10;
     const pasos = 80;
@@ -161,7 +161,7 @@ export default () => {
         if (botonImprimir.innerText === 'Imprimir') {
           transmitirImpresion();
 
-          fetch('https://fax-tally.enflujo.com', {
+          fetch('http://localhost:4002', {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({ img: datos, fecha: new Date(), ancho, alto }),

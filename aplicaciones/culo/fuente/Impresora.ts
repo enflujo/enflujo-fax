@@ -146,9 +146,9 @@ export class Impresora {
    * Send data to hardware and flush buffer
    * @return {[Promise]}
    */
-  flush(): Promise<this> {
+  flush(datos?: Uint8Array): Promise<this> {
     return new Promise((resolve, reject) => {
-      const buf = this.buffer.flush();
+      const buf = datos ? Buffer.from(datos) : this.buffer.flush();
       this.conexion.transfer(buf, (error) => {
         if (error) reject(error);
         else resolve(this);
@@ -168,8 +168,8 @@ export class Impresora {
     return this;
   }
 
-  async desconectar(): Promise<this> {
-    await this.flush();
+  async desconectar(datos?: Uint8Array): Promise<this> {
+    await this.flush(datos);
     return new Promise((resolve, reject) => {
       if (!this.dispositivo) return;
       try {
