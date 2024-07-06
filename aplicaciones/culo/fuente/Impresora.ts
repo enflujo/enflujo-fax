@@ -59,7 +59,7 @@ export class Impresora {
     if (!(imagen instanceof Imagen)) throw new TypeError('Only escpos.Image supported');
     const n = !!~['D8', 'S8'].indexOf(densidad.toUpperCase()) ? 1 : 3;
     const header = BITMAP_FORMAT[densidad];
-    const bitmap = imagen.toBitmap(n * 4);
+    const bitmap = imagen.toBitmap(n * 8);
 
     this.espacioEntreLinea(0);
 
