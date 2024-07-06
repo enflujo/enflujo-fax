@@ -8,12 +8,14 @@ export default () => {
   const proceso = document.getElementById('proceso') as HTMLSpanElement;
   const valorPorcentaje = document.getElementById('porcentaje') as HTMLSpanElement;
   const botonImprimir = document.getElementById('botonImprimir') as HTMLDivElement;
-  const contenedorTransmision = document.getElementById('contenedorTransmision') as HTMLDivElement;
-  const transmision = document.getElementById('transmision') as HTMLDivElement;
+  // const contenedorTransmision = document.getElementById('contenedorTransmision') as HTMLDivElement;
+  // const transmision = document.getElementById('transmision') as HTMLDivElement;
   const fotomatica = document.getElementById('fotomatica') as HTMLDivElement;
   const contenedorEditor = document.getElementById('contenedorEditor') as HTMLDivElement;
 
   document.body.addEventListener('nuevaImagen', (evento: CustomEventInit<{ img: HTMLImageElement }>) => {
+    let contadorImpresiones = 0;
+
     if (!evento.detail) return;
     const { img } = evento.detail;
     const anchoImg = 380;
@@ -144,6 +146,8 @@ export default () => {
     }
 
     function fin() {
+      contadorImpresiones = 0;
+      botonImprimir.innerText = 'Imprimir';
       const { data: pixeles } = ctx.getImageData(0, 0, ancho, alto);
       const datos: boolean[] = [];
       for (let i = 0; i < pixeles.length; i += 4) {
@@ -158,6 +162,13 @@ export default () => {
 
       // Imprimir la imagen cuando se haga clic en el botón
       botonImprimir.onclick = () => {
+        contadorImpresiones++;
+
+        if (contadorImpresiones > 3) {
+          botonImprimir.innerText = 'Máximo 3 impresiones por imagen ;), sube una nueva';
+          return;
+        }
+
         if (botonImprimir.innerText === 'Imprimir') {
           transmitirImpresion();
 
@@ -165,9 +176,12 @@ export default () => {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({ img: datos, fecha: new Date(), ancho, alto }),
-          }).then(() => {});
+          }).then(() => {
+            ocultarImpresion();
+          });
         } else {
-          ocultarImpresion();
+          botonImprimir.innerText = 'Imprimiendo... (espera a que termine de imprimir)';
+          // ocultarImpresion();
         }
       };
     }
@@ -177,19 +191,20 @@ export default () => {
     }
 
     function transmitirImpresion() {
-      fotomatica.classList.add('oculta');
-      contenedorEditor.classList.add('oculto');
-      contenedorTransmision.classList.add('transmitiendo');
-      transmision.classList.add('transmitiendo');
-      botonImprimir.innerText = 'Volver';
+      // fotomatica.classList.add('oculta');
+      // contenedorEditor.classList.add('oculto');
+      // contenedorTransmision.classList.add('transmitiendo');
+      // transmision.classList.add('transmitiendo');
+      botonImprimir.innerText = 'Imprimiendo...';
+      // botonImprimir.onclick = () => {};
     }
 
     function ocultarImpresion() {
-      fotomatica.classList.remove('oculta');
-      contenedorEditor.classList.remove('oculto');
-      contenedorTransmision.classList.remove('transmitiendo');
-      transmision.classList.remove('transmitiendo');
-      botonImprimir.classList.add('oculto');
+      // fotomatica.classList.remove('oculta');
+      // contenedorEditor.classList.remove('oculto');
+      // contenedorTransmision.classList.remove('transmitiendo');
+      // transmision.classList.remove('transmitiendo');
+      // botonImprimir.classList.add('oculto');
       botonImprimir.innerText = 'Imprimir';
     }
   });

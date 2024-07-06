@@ -55,25 +55,28 @@
     </header>
 
     <main id="contenedor">
-      <!-- <div id="contenedorImpresora" class="marco"><img src="https://muchachita.enflujo.com/" /></div> -->
       <div id="fotomatica" class="marco">
         <label for="buzon" class="mensajeBuzon">Mándanos una foto</label>
         <input id="buzon" type="file" accept="image/*,capture=camera" name="buzon" />
       </div>
-      <div id="botonImprimir" class="oculto">Imprimir</div>
-      <div id="contenedorEditor">
+
+      <div id="contenedorProceso">
+        <div id="botonImprimir" class="oculto">Imprimir</div>
         <div id="cargador">
           <span id="porcentaje">0%</span>
           <span id="proceso"></span>
         </div>
+      </div>
+
+      <div id="contenedorEditor">
         <canvas id="lienzo"></canvas>
       </div>
 
-      <div id="contenedorTransmision">
+      <!-- <div id="contenedorTransmision">
         <img id="transmision" src="https://fax-camara.enflujo.com/" alt="transmisión" />
-      </div>
+      </div> -->
     </main>
-    <!-- <footer>EnFlujo</footer> -->
+    <footer></footer>
     <canvas id="fondo"></canvas>
     <script type="module" src="/fuente/programa.ts"></script>
   </body>
