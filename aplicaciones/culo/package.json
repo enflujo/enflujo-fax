@@ -9,20 +9,20 @@
     "prender": "node publico/programa.js"
   },
   "devDependencies": {
-    "@types/node": "^20.11.6",
-    "esbuild": "^0.19.12",
-    "nodemon": "^3.0.3",
+    "@types/node": "^20.14.10",
+    "esbuild": "^0.23.0",
+    "nodemon": "^3.1.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.5.3"
   },
   "dependencies": {
-    "@fastify/cors": "^8.5.0",
+    "@fastify/cors": "^9.0.1",
     "@fastify/type-provider-typebox": "^4.0.0",
-    "@sinclair/typebox": "^0.32.12",
-    "esc-pos-encoder": "^2.0.4",
-    "fastify": "^4.25.2",
+    "@sinclair/typebox": "^0.32.34",
+    "esc-pos-encoder": "^2.1.0",
+    "fastify": "^4.28.1",
     "mutable-buffer": "^4.0.2",
     "sqlite3": "^5.1.7",
-    "usb": "^2.11.0"
+    "usb": "^2.13.0"
   }
 }

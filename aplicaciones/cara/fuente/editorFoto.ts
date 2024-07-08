@@ -1,6 +1,8 @@
 import { Delaunay } from 'd3-delaunay';
 import { desdePorcentaje, porcentaje } from './utilidades/ayudas';
 import { DOS_PI } from './utilidades/constantes';
+import EscPosEncoder from 'esc-pos-encoder';
+const encoder = new EscPosEncoder();
 
 export default () => {
   const lienzo = document.getElementById('lienzo') as HTMLCanvasElement;
@@ -155,19 +157,31 @@ export default () => {
       }
 
       mostrarBotonImprimir();
-
+      /**
+ * 'threshold'
+    'bayer'
+    'floydsteinberg'
+    'atkinson'
+ */
+      const imgCodificada = encoder.image(lienzo, anchoImg, 568, 'bayer').encode();
+      console.log(imgCodificada);
+      const decodificador = new TextEncoder();
       // Imprimir la imagen cuando se haga clic en el botón
       botonImprimir.onclick = () => {
         if (botonImprimir.innerText === 'Imprimir') {
           transmitirImpresion();
-
           fetch('http://localhost:4002', {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify({ img: datos, fecha: new Date(), ancho, alto }),
+            body: JSON.stringify({
+              img: Array.from(imgCodificada),
+              fecha: new Date(),
+              ancho: anchoImg,
+              alto: 568,
+            }),
           }).then(() => {});
         } else {
-          ocultarImpresion();
+          // ocultarImpresion();
         }
       };
     }
