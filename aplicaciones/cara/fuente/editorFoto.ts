@@ -1,14 +1,10 @@
-import { Delaunay } from 'd3-delaunay';
+import { altoContraste, atkinson, bayer, floydsteinberg } from './filtros/tramados';
 import { desdePorcentaje, porcentaje } from './utilidades/ayudas';
-import { DOS_PI } from './utilidades/constantes';
-import EscPosEncoder from 'esc-pos-encoder';
-const encoder = new EscPosEncoder();
 
 export default () => {
   const lienzo = document.getElementById('lienzo') as HTMLCanvasElement;
   const ctx = lienzo.getContext('2d') as CanvasRenderingContext2D;
-  const proceso = document.getElementById('proceso') as HTMLSpanElement;
-  const valorPorcentaje = document.getElementById('porcentaje') as HTMLSpanElement;
+
   const botonImprimir = document.getElementById('botonImprimir') as HTMLDivElement;
   const contenedorTransmision = document.getElementById('contenedorTransmision') as HTMLDivElement;
   const transmision = document.getElementById('transmision') as HTMLDivElement;
@@ -19,13 +15,8 @@ export default () => {
     if (!evento.detail) return;
     const { img } = evento.detail;
     const anchoImg = 568; // para la impresora de 58mm: 384px, para la de 80mm: 568px
-    const radio = 0.9;
-    const densidad = 10;
-    const pasos = 80;
-    const corte = 200;
     let ancho = 0;
     let alto = 0;
-    const pasoPorcentaje = 100 / pasos;
 
     /**
      * Escalar foto: Si es vertical o cuadrada, la deja normal. Si es horizontal, la rota.
@@ -35,18 +26,30 @@ export default () => {
       const porcentajeAncho = porcentaje(anchoImg, naturalWidth);
       const altoImg = desdePorcentaje(porcentajeAncho, naturalHeight);
       ancho = anchoImg;
-      alto = altoImg;
+      alto = Math.round(altoImg / 8) * 8;
       lienzo.width = ancho;
       lienzo.height = alto;
+      Object.assign(lienzo.style, {
+        transform: `rotate(0deg)`, // Quitar si se había rotado antes
+        height: '100%',
+      });
+
       ctx.drawImage(img, 0, 0, ancho, alto);
     } else {
       const porcentajeAlto = porcentaje(anchoImg, naturalHeight);
       const altoImg = desdePorcentaje(porcentajeAlto, naturalWidth);
       ancho = anchoImg;
-      alto = altoImg;
+      alto = Math.round(altoImg / 8) * 8;
       lienzo.width = ancho;
       lienzo.height = alto;
-
+      const p = porcentaje(ancho, contenedorEditor.clientWidth);
+      console.log(p);
+      Object.assign(lienzo.style, {
+        transform: `rotate(-90deg)`, // Rotar pero sólo visualmente en pantalla para que las personas la vean normal en pantalla
+        height: '95%',
+        // width:
+      });
+      lienzo.style.transform = `rotate(-90deg)`;
       const x = ancho / 2;
       const y = alto / 2;
       const r = Math.PI / 2;
@@ -58,114 +61,14 @@ export default () => {
       ctx.restore();
     }
 
-    const { data: pixeles } = ctx.getImageData(0, 0, ancho, alto);
-    const datos = new Float64Array(ancho * alto);
-    for (let i = 0, n = pixeles.length / 4; i < n; ++i) {
-      datos[i] = Math.max(0, 1 - pixeles[i * 4] / 254);
-    }
-    const n = Math.round((ancho * alto) / densidad);
+    const imagenProcesada = atkinson(ctx.getImageData(0, 0, ancho, alto));
 
-    const puntos = new Float64Array(n * 2);
-    const c = new Float64Array(n * 2);
-    const s = new Float64Array(n);
+    ctx.putImageData(imagenProcesada, 0, 0);
+    fin(codificarImagenParaImpresora(imagenProcesada));
 
-    // Iniciar puntos con "rejection sampling"200
-    for (let i = 0; i < n; ++i) {
-      for (let j = 0; j < 30; ++j) {
-        const x = (puntos[i * 2] = Math.floor(Math.random() * ancho));
-        const y = (puntos[i * 2 + 1] = Math.floor(Math.random() * alto));
-        if (Math.random() < datos[y * ancho + x]) break;
-      }
-    }
-
-    const delaunay = new Delaunay(puntos);
-    const voronoi = delaunay.voronoi([0, 0, ancho, alto]);
-
-    let k = 0;
-
-    function paso() {
-      c.fill(0);
-      s.fill(0);
-
-      for (let y = 0, i = 0; y < alto; ++y) {
-        for (let x = 0; x < ancho; ++x) {
-          const area = datos[y * ancho + x];
-          const _x = x + 0.5;
-          const _y = y + 0.5;
-          i = delaunay.find(_x, _y, i);
-          s[i] += area;
-          c[i * 2] += area * _x;
-          c[i * 2 + 1] += area * _y;
-        }
-      }
-
-      // relajar puntos moviendolos en su espacio/area posible.
-      const area = Math.pow(k + 1, -0.8) * 10;
-
-      for (let i = 0; i < n; ++i) {
-        const x0 = puntos[i * 2];
-        const y0 = puntos[i * 2 + 1];
-        const x1 = s[i] ? c[i * 2] / s[i] : x0;
-        const y1 = s[i] ? c[i * 2 + 1] / s[i] : y0;
-        puntos[i * 2] = x0 + (x1 - x0) * 1.8 + (Math.random() - 0.5) * area;
-        puntos[i * 2 + 1] = y0 + (y1 - y0) * 1.8 + (Math.random() - 0.5) * area;
-      }
-
-      pintar(puntos);
-      voronoi.update();
-      k++;
-
-      // Actualizar barra de porcentaje.
-      const nuevoPorcentaje = k * pasoPorcentaje;
-      proceso.style.width = `${nuevoPorcentaje}%`;
-      valorPorcentaje.innerText = `${nuevoPorcentaje}%`;
-
-      if (k < pasos) {
-        requestAnimationFrame(paso);
-      } else {
-        fin();
-      }
-    }
-
-    paso();
-
-    function pintar(puntos: Float64Array) {
-      ctx.fillStyle = '#fff';
-      ctx.fillRect(0, 0, ancho, alto);
-      ctx.beginPath();
-
-      for (let i = 0, n = puntos.length; i < n; i += 2) {
-        const x = puntos[i];
-        const y = puntos[i + 1];
-        ctx.moveTo(x + 0.5, y);
-        ctx.arc(x, y, radio, 0, DOS_PI);
-      }
-
-      ctx.fillStyle = '#000';
-      ctx.fill();
-    }
-
-    function fin() {
-      const { data: pixeles } = ctx.getImageData(0, 0, ancho, alto);
-      const datos: boolean[] = [];
-      for (let i = 0; i < pixeles.length; i += 4) {
-        const r = pixeles[i];
-        const g = pixeles[i + 1];
-        const b = pixeles[i + 2];
-        const a = pixeles[i + 3];
-        datos.push(a != 0 && r < corte && g < corte && b < corte);
-      }
-
+    function fin(datosImagen?: number[]) {
       mostrarBotonImprimir();
-      /**
- * 'threshold'
-    'bayer'
-    'floydsteinberg'
-    'atkinson'
- */
-      const imgCodificada = encoder.image(lienzo, anchoImg, 568, 'bayer').encode();
-      console.log(imgCodificada);
-      const decodificador = new TextEncoder();
+
       // Imprimir la imagen cuando se haga clic en el botón
       botonImprimir.onclick = () => {
         if (botonImprimir.innerText === 'Imprimir') {
@@ -174,7 +77,7 @@ export default () => {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({
-              img: Array.from(imgCodificada),
+              img: datosImagen,
               fecha: new Date(),
               ancho: anchoImg,
               alto: 568,
@@ -208,3 +111,49 @@ export default () => {
     }
   });
 };
+
+function codificarImagenParaImpresora(imagen: ImageData) {
+  const { width: ancho, height: alto } = imagen;
+  const datosImagen: number[] = [];
+
+  if (ancho % 8 !== 0) {
+    throw new Error('El ancho tiene que ser múltipo de 8');
+  }
+
+  if (alto % 8 !== 0) {
+    throw new Error('El alto tiene que ser múltipo de 8');
+  }
+
+  const obtenerPixel = (x: number, y: number) =>
+    x < ancho && y < alto ? (imagen.data[(ancho * y + x) * 4] > 0 ? 0 : 1) : 0;
+
+  const datosColumna = (ancho: number, alto: number) => {
+    const respuesta: Uint8Array[] = [];
+
+    for (let s = 0; s < Math.ceil(alto / 24); s++) {
+      const datos = new Uint8Array(ancho * 3);
+
+      for (let x = 0; x < ancho; x++) {
+        for (let c = 0; c < 3; c++) {
+          for (let b = 0; b < 8; b++) {
+            datos[x * 3 + c] |= obtenerPixel(x, s * 24 + b + 8 * c) << (7 - b);
+          }
+        }
+      }
+
+      respuesta.push(datos);
+    }
+
+    return respuesta;
+  };
+
+  datosImagen.push(0x1b, 0x33, 0x24);
+
+  datosColumna(ancho, alto).forEach((bytes) => {
+    datosImagen.push(0x1b, 0x2a, 0x21, ancho & 0xff, (ancho >> 8) & 0xff, ...Array.from(bytes), 0x0a);
+  });
+
+  datosImagen.push(0x1b, 0x32);
+
+  return datosImagen;
+}
