@@ -73,7 +73,7 @@ export default () => {
       botonImprimir.onclick = () => {
         if (botonImprimir.innerText === 'Imprimir') {
           transmitirImpresion();
-          fetch('http://localhost:4002', {
+          fetch('https://fax-tally.enflujo.com', {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({
