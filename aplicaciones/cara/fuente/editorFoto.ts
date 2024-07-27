@@ -14,7 +14,7 @@ export default () => {
   document.body.addEventListener('nuevaImagen', (evento: CustomEventInit<{ img: HTMLImageElement }>) => {
     if (!evento.detail) return;
     const { img } = evento.detail;
-    const anchoImg = 568; // para la impresora de 58mm: 384px, para la de 80mm: 568px
+    const anchoImg = 384; // para la impresora de 58mm: 384px, para la de 80mm: 568px
     let ancho = 0;
     let alto = 0;
 
