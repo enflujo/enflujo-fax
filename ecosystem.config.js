@@ -11,10 +11,7 @@ module.exports = {
 
     {
       name: 'culo',
-      script: './aplicaciones/culo/publico/programa.js',
-      env: {
-        PORT: '4002',
-      },
+      script: 'yarn prender:servidor',
     },
   ],
 };
