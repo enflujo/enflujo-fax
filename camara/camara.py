@@ -17,10 +17,9 @@ from picamera2.outputs import FileOutput
 PAGE = """\
 <html>
 <head>
-<title>picamera2 MJPEG streaming demo</title>
+<title>Cámara Fax</title>
 </head>
 <body>
-<h1>Picamera2 MJPEG Streaming Demo</h1>
 <img src="stream.mjpg" width="640" height="480" />
 </body>
 </html>
@@ -41,10 +40,6 @@ class StreamingOutput(io.BufferedIOBase):
 class StreamingHandler(server.BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == "/":
-            self.send_response(301)
-            self.send_header("Location", "/index.html")
-            self.end_headers()
-        elif self.path == "/index.html":
             content = PAGE.encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "text/html")
