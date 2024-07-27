@@ -80,7 +80,7 @@ export default () => {
               img: datosImagen,
               fecha: new Date(),
               ancho: anchoImg,
-              alto: 568,
+              alto: 384,
             }),
           }).then(() => {});
         } else {
