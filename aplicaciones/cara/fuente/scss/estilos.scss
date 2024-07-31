@@ -98,10 +98,17 @@ header {
   }
 }
 
+#contenedorProceso {
+  // position: fixed;
+  // top: 50%;
+  // transform: translateY(-50%);
+  width: 100%;
+}
+
 h1 {
   font-family: 'Lab DJR Web';
-  font-size: 2.75em;
-  padding: 50vh 0.8em 0.1em 0.8em;
+  font-size: 2em;
+  padding: 0.5em 0em 0.1em 0em;
   margin: 0;
 
   font-variation-settings:
@@ -424,20 +431,24 @@ h1 {
 }
 
 #botonImprimir {
-  margin: 1em auto;
+  // margin: 1em auto;
   width: fit-content;
-  background-color: #ff6666;
+  background-color: #ff6666cb;
   padding: 0.5em;
+  width: 100%;
+  text-align: center;
   cursor: pointer;
   display: block;
+  font-weight: bold;
+  font-size: 2em;
 
   &.oculto {
     display: none;
   }
 
-  &:hover {
-    background-color: #57e2e5;
-  }
+  // &:hover {
+  //   background-color: #57e2e5;
+  // }
 }
 
 @media screen and (min-width: $corte1) {

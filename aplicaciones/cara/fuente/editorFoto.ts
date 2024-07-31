@@ -10,6 +10,8 @@ export default () => {
   const transmision = document.getElementById('transmision') as HTMLDivElement;
   const fotomatica = document.getElementById('fotomatica') as HTMLDivElement;
   const contenedorEditor = document.getElementById('contenedorEditor') as HTMLDivElement;
+  const urlTally = import.meta.env.DEV ? 'http://localhost:4002' : 'https://fax-tally.enflujo.com';
+  let contadorImpresiones = 0;
 
   document.body.addEventListener('nuevaImagen', (evento: CustomEventInit<{ img: HTMLImageElement }>) => {
     if (!evento.detail) return;
@@ -29,10 +31,10 @@ export default () => {
       alto = Math.round(altoImg / 8) * 8;
       lienzo.width = ancho;
       lienzo.height = alto;
-      Object.assign(lienzo.style, {
-        transform: `rotate(0deg)`, // Quitar si se había rotado antes
-        height: '100%',
-      });
+      // Object.assign(lienzo.style, {
+      //   transform: `rotate(0deg)`, // Quitar si se había rotado antes
+      //   height: '100%',
+      // });
 
       ctx.drawImage(img, 0, 0, ancho, alto);
     } else {
@@ -42,14 +44,14 @@ export default () => {
       alto = Math.round(altoImg / 8) * 8;
       lienzo.width = ancho;
       lienzo.height = alto;
-      const p = porcentaje(ancho, contenedorEditor.clientWidth);
-      console.log(p);
-      Object.assign(lienzo.style, {
-        transform: `rotate(-90deg)`, // Rotar pero sólo visualmente en pantalla para que las personas la vean normal en pantalla
-        height: '95%',
-        // width:
-      });
-      lienzo.style.transform = `rotate(-90deg)`;
+      // const p = porcentaje(ancho, contenedorEditor.clientWidth);
+      // console.log(p);
+      // Object.assign(lienzo.style, {
+      //   transform: `rotate(-90deg)`, // Rotar pero sólo visualmente en pantalla para que las personas la vean normal en pantalla
+      //   height: '95%',
+      //   // width:
+      // });
+      // lienzo.style.transform = `rotate(-90deg)`;
       const x = ancho / 2;
       const y = alto / 2;
       const r = Math.PI / 2;
@@ -67,12 +69,15 @@ export default () => {
     fin(codificarImagenParaImpresora(imagenProcesada));
 
     function fin(datosImagen?: number[]) {
+      contadorImpresiones = 0;
+      botonImprimir.innerText = 'Imprimir';
       mostrarBotonImprimir();
 
       // Imprimir la imagen cuando se haga clic en el botón
       botonImprimir.onclick = () => {
         if (botonImprimir.innerText === 'Imprimir') {
           transmitirImpresion();
+
           fetch('https://fax-tally.enflujo.com', {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
@@ -82,7 +87,9 @@ export default () => {
               ancho: anchoImg,
               alto: 384,
             }),
-          }).then(() => {});
+          }).then(() => {
+            ocultarImpresion();
+          });
         } else {
           // ocultarImpresion();
         }
@@ -94,19 +101,20 @@ export default () => {
     }
 
     function transmitirImpresion() {
-      fotomatica.classList.add('oculta');
-      contenedorEditor.classList.add('oculto');
-      contenedorTransmision.classList.add('transmitiendo');
-      transmision.classList.add('transmitiendo');
-      botonImprimir.innerText = 'Volver';
+      // fotomatica.classList.add('oculta');
+      // contenedorEditor.classList.add('oculto');
+      // contenedorTransmision.classList.add('transmitiendo');
+      // transmision.classList.add('transmitiendo');
+      botonImprimir.innerText = 'Imprimiendo...';
+      // botonImprimir.onclick = () => {};
     }
 
     function ocultarImpresion() {
-      fotomatica.classList.remove('oculta');
-      contenedorEditor.classList.remove('oculto');
-      contenedorTransmision.classList.remove('transmitiendo');
-      transmision.classList.remove('transmitiendo');
-      botonImprimir.classList.add('oculto');
+      // fotomatica.classList.remove('oculta');
+      // contenedorEditor.classList.remove('oculto');
+      // contenedorTransmision.classList.remove('transmitiendo');
+      // transmision.classList.remove('transmitiendo');
+      // botonImprimir.classList.add('oculto');
       botonImprimir.innerText = 'Imprimir';
     }
   });

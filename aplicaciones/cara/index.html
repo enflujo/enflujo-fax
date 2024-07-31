@@ -60,12 +60,16 @@
         <label for="buzon" class="mensajeBuzon">Mándanos una foto</label>
         <input id="buzon" type="file" accept="image/*,capture=camera" name="buzon" />
       </div>
-      <div id="botonImprimir" class="oculto">Imprimir</div>
-      <div id="contenedorEditor">
+
+      <div id="contenedorProceso">
+        <div id="botonImprimir" class="oculto">Imprimir</div>
         <div id="cargador">
           <span id="porcentaje">0%</span>
           <span id="proceso"></span>
         </div>
+      </div>
+
+      <div id="contenedorEditor">
         <canvas id="lienzo"></canvas>
       </div>
 
