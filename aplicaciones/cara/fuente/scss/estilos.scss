@@ -417,7 +417,6 @@ h1 {
   top: 0px;
 
   #transmision {
-    transform: rotate(180deg);
     width: 100vw;
     &.transmitiendo {
       width: 50vw;
@@ -456,12 +455,11 @@ h1 {
     width: 60vw;
     margin: 0 auto;
     padding: 0vw 20vw;
-    position: fixed;
     top: 0px;
 
     #transmision {
-      transform: rotate(180deg);
       width: 60vw;
+
       &.transmitiendo {
         width: 50vw;
       }
@@ -510,6 +508,7 @@ h1 {
       font-palette: --bn2;
     }
   }
+
   #buzon {
     border: 0;
     padding: 2em 1em 1em 1em;
@@ -521,7 +520,7 @@ h1 {
   }
 
   #contenedorTransmision {
-    width: 10vw;
+    width: 300px;
     margin: 0 auto;
     padding: 0vw;
     position: fixed;
@@ -529,8 +528,7 @@ h1 {
     right: 10px;
 
     #transmision {
-      transform: rotate(180deg);
-      width: 10vw;
+      width: 300px;
       &.transmitiendo {
         width: 50vw;
       }
