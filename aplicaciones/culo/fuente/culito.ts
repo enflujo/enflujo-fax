@@ -3,10 +3,7 @@ import cors from '@fastify/cors';
 import { Static, Type } from '@sinclair/typebox';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { buscarImpresora, conectar } from './ayudas';
-// import Imagen from './Imagen';
 import { Impresora } from './Impresora';
-// import sqlite3 from 'sqlite3';
-// import EscPosEncoder from 'esc-pos-encoder';
 
 export const Foto = Type.Object({
   img: Type.Array(Type.Number()),
@@ -28,72 +25,39 @@ if (process.env.NODE_ENV !== 'produccion') {
   aplicacion.register(cors);
 }
 
-aplicacion.post<{ Body: TFoto }>(
-  '/',
-  // {
-  //   schema: {
-  //     body: Foto,
-  //   },
-  // },
-  async (peticion, respuesta) => {
-    try {
-      const { img, fecha, ancho, alto } = peticion.body;
-      if (dispositivo) {
-        console.log(typeof img);
-        const conexion = await conectar(dispositivo);
-        if (!conexion) throw new Error('No se pudo conectar la impresora');
-        const impresora = new Impresora(dispositivo, conexion, { encoding: 'Cp858' });
-        // const imagen = new Imagen(img, { ancho, alto });
-        // await impresora.alineacion('centrado').imagen(imagen, 'd24');
-        impresora.buffer.write(img);
-        impresora.cut();
-        await impresora.desconectar();
-      } else {
-        console.error('No se conectó a la impresora');
-      }
-    } catch (error) {
-      console.log(error);
+aplicacion.post<{ Body: TFoto }>('/', async (peticion, respuesta) => {
+  try {
+    const { img, fecha, ancho, alto } = peticion.body;
+    if (dispositivo) {
+      const conexion = await conectar(dispositivo);
+      if (!conexion) throw new Error('No se pudo conectar la impresora');
+
+      const impresora = new Impresora(dispositivo, conexion, { encoding: 'Cp858' });
+
+      // 🔹 Reemplaza desde aquí
+      const bytes = Buffer.isBuffer(img) ? img : Buffer.from(img);
+
+      // 1) Enviar la imagen sola y cerrar con LF
+      await impresora.flush(bytes);
+      await impresora.flush(Uint8Array.from([0x0a])); // salto de línea
+
+      // 2) Alimentar más líneas y cortar en un segundo envío
+      impresora.lineaVacia(8); // sube o baja este número si hace falta
+      impresora.cut(false /* full cut */, 0);
+      await impresora.flush(); // envía feed + cut
+      await new Promise((r) => setTimeout(r, 50)); // opcional: deja respirar a la impresora
+      await impresora.desconectar(); // cierra conexión
+      // 🔹 Hasta aquí
+    } else {
+      console.error('No se conectó a la impresora');
     }
-    respuesta.send({ mensaje: 'llegó diegui al servidor' });
+  } catch (error) {
+    console.log(error);
   }
-);
+  respuesta.send({ mensaje: 'llegó diegui al servidor' });
+});
 
 aplicacion.listen({ port: puerto }, (error, direccion) => {
   if (error) throw error;
   console.log('servidor en', direccion);
 });
-
-// Guardar datos en base de datos
-// const bd = new sqlite3.Database(':memory:', (err) => {
-//   if (err) {
-//     return console.error(err.message);
-//   }
-//   console.log('Conectada con la base de datos SQlite 🚀');
-// });
-// prueba().catch(console.error);
-// async function prueba() {
-// const encoder = new EscPosEncoder();
-// let result = encoder.initialize().text('EnFlujo').newline().cut().encode();
-// if (dispositivo) {
-//   const conexion = await conectar(dispositivo);
-//   if (!conexion) throw new Error('No se pudo conectar la impresora');
-//   const impresora = new Impresora(dispositivo, conexion, { encoding: 'Cp858' });
-//   // const imagen = new Imagen(img, { ancho, alto });
-//   // await impresora.alineacion('centrado').imagen(imagen, 'd24');
-//   // impresora.buffer.write(result);
-//   impresora.cut();
-//   await impresora.desconectar(result);
-// } else {
-//   console.error('No se conectó a la impresora');
-// }
-// if (dispositivo) {
-//   const conexion = await conectar(dispositivo);
-//   if (!conexion) throw new Error('No se pudo conectar la impresora');
-//   const impresora = new Impresora(dispositivo, conexion, { encoding: 'Cp858' });
-//   impresora.buffer.write('ESC "@"');
-//   // const imagen = new Imagen(img, { ancho, alto });
-//   // await impresora.alineacion('centrado').imagen(imagen, 'd24');
-//   impresora.cut();
-//   await impresora.desconectar();
-// }
-// }

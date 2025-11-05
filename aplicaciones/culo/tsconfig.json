@@ -1,17 +1,19 @@
 {
   "compilerOptions": {
     "module": "CommonJS",
-    "target": "es2016",
+    "target": "ES2022",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    // "strict": true,
+    "strict": true,
     "skipLibCheck": true,
     "moduleResolution": "node",
+    "outDir": "publico",
+    "rootDir": "fuente",
     "baseUrl": ".",
     "paths": {
-      "@/*": ["fuente/*"],
-    },
+      "@/*": ["fuente/*"]
+    }
   },
   "include": ["./fuente/**/*"],
-  "exclude": ["node_modules"],
+  "exclude": ["node_modules"]
 }

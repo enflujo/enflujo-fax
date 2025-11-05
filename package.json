@@ -18,7 +18,8 @@
     "detener": "pm2 stop ecosystem.config.js"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "prettier": "^3.3.3"
-  }
+    "concurrently": "^9.2.1",
+    "prettier": "^3.6.2"
+  },
+  "packageManager": "yarn@4.10.3"
 }

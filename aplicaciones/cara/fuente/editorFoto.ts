@@ -6,17 +6,12 @@ export default () => {
   const ctx = lienzo.getContext('2d') as CanvasRenderingContext2D;
 
   const botonImprimir = document.getElementById('botonImprimir') as HTMLDivElement;
-  const contenedorTransmision = document.getElementById('contenedorTransmision') as HTMLDivElement;
-  const transmision = document.getElementById('transmision') as HTMLDivElement;
-  const fotomatica = document.getElementById('fotomatica') as HTMLDivElement;
-  const contenedorEditor = document.getElementById('contenedorEditor') as HTMLDivElement;
-  const urlTally = import.meta.env.DEV ? 'http://localhost:4002' : 'https://fax-tally.enflujo.com';
   let contadorImpresiones = 0;
 
   document.body.addEventListener('nuevaImagen', (evento: CustomEventInit<{ img: HTMLImageElement }>) => {
     if (!evento.detail) return;
     const { img } = evento.detail;
-    const anchoImg = 384; // para la impresora de 58mm: 384px, para la de 80mm: 568px
+    const anchoImg = 568; // para la impresora de 58mm: 384px, para la de 80mm: 568px
     let ancho = 0;
     let alto = 0;
 
@@ -78,7 +73,7 @@ export default () => {
         if (botonImprimir.innerText === 'Imprimir') {
           transmitirImpresion();
 
-          fetch('https://fax-tally.enflujo.com', {
+          fetch('https://fax2-tally.enflujo.com', {
             method: 'POST',
             headers: { 'Content-type': 'application/json' },
             body: JSON.stringify({
