@@ -1,7 +1,7 @@
 import { MutableBuffer } from 'mutable-buffer';
 import { CHARACTER_SPACING, LINE_SPACING, PAPER, NUEVA_LINEA, BITMAP_FORMAT, ALINEACION } from './constantes';
 
-import type { Device, OutEndpoint } from 'usb';
+import PuertoSerie from './PuertoSerie';
 import Imagen from './Imagen';
 import type { Alineacion, DensidadMapaBits, ModeloImpresora, OpcionesImpresora, TiposCaracteres } from './tipos';
 
@@ -39,17 +39,15 @@ export interface CustomTableOptions {
 }
 
 export class Impresora {
-  public dispositivo: Device;
-  public conexion: OutEndpoint;
+  public puertoSerie: PuertoSerie;
   public buffer = new MutableBuffer();
   protected opciones: OpcionesImpresora;
   protected encoding: TiposCaracteres;
   protected width: number;
   protected _model?: ModeloImpresora;
 
-  constructor(dispositivo: Device, conexion: OutEndpoint, opciones: OpcionesImpresora) {
-    this.dispositivo = dispositivo;
-    this.conexion = conexion;
+  constructor(puertoSerie: PuertoSerie, opciones: OpcionesImpresora) {
+    this.puertoSerie = puertoSerie;
     this.opciones = opciones;
     this.encoding = opciones.encoding ?? 'Cp858';
     this.width = opciones.width ?? 48;
@@ -147,12 +145,16 @@ export class Impresora {
    * @return {[Promise]}
    */
   flush(datos?: Uint8Array): Promise<this> {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       const buf = datos ? Buffer.from(datos) : this.buffer.flush();
-      this.conexion.transfer(buf, (error) => {
-        if (error) reject(error);
-        else resolve(this);
-      });
+      try {
+        await this.puertoSerie.escribir(buf);
+        // Esperar a que se drene completamente para asegurar que todo se envió
+        await this.puertoSerie.drain();
+        resolve(this);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
@@ -170,11 +172,9 @@ export class Impresora {
 
   async desconectar(datos?: Uint8Array): Promise<this> {
     await this.flush(datos);
-    return new Promise((resolve, reject) => {
-      if (!this.dispositivo) return;
+    return new Promise(async (resolve, reject) => {
       try {
-        this.dispositivo.close();
-        this.conexion.removeAllListeners('detach');
+        await this.puertoSerie.cerrar();
         resolve(this);
       } catch (error) {
         reject(error);

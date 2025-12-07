@@ -2,8 +2,9 @@ import fastify from 'fastify';
 import cors from '@fastify/cors';
 import { Static, Type } from '@sinclair/typebox';
 import { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
-import { buscarImpresora, conectar } from './ayudas';
+import { conectar } from './ayudas';
 import { Impresora } from './Impresora';
+import { CONFIG_IMPRESION, DEBUG } from './configuracion';
 
 export const Foto = Type.Object({
   img: Type.Array(Type.Number()),
@@ -19,8 +20,6 @@ const aplicacion = fastify({
   bodyLimit: 30 * 1024 * 1024, // ampliar a 30mb
 }).withTypeProvider<TypeBoxTypeProvider>();
 
-const dispositivo = buscarImpresora();
-
 if (process.env.NODE_ENV !== 'produccion') {
   aplicacion.register(cors);
 }
@@ -28,33 +27,78 @@ if (process.env.NODE_ENV !== 'produccion') {
 aplicacion.post<{ Body: TFoto }>('/', async (peticion, respuesta) => {
   try {
     const { img, fecha, ancho, alto } = peticion.body;
-    if (dispositivo) {
-      const conexion = await conectar(dispositivo);
-      if (!conexion) throw new Error('No se pudo conectar la impresora');
 
-      const impresora = new Impresora(dispositivo, conexion, { encoding: 'Cp858' });
+    // Conectar a la impresora por puerto serial
+    const puertoSerie = await conectar();
+    const impresora = new Impresora(puertoSerie, { encoding: 'Cp858' });
 
-      // 🔹 Reemplaza desde aquí
+    // 🔹 Flujo optimizado para evitar cuelgues y pérdida de datos
+    try {
       const bytes = Buffer.isBuffer(img) ? img : Buffer.from(img);
 
-      // 1) Enviar la imagen sola y cerrar con LF
-      await impresora.flush(bytes);
-      await impresora.flush(Uint8Array.from([0x0a])); // salto de línea
+      if (DEBUG.MOSTRAR_BYTES) {
+        console.log(`Iniciando impresión: ${bytes.length} bytes, ${ancho}x${alto}`);
+      }
 
-      // 2) Alimentar más líneas y cortar en un segundo envío
-      impresora.lineaVacia(8); // sube o baja este número si hace falta
+      // 1) Enviar la imagen en chunks pequeños para no saturar
+      const totalChunks = Math.ceil(bytes.length / CONFIG_IMPRESION.CHUNK_SIZE);
+      
+      for (let i = 0; i < bytes.length; i += CONFIG_IMPRESION.CHUNK_SIZE) {
+        const chunk = bytes.slice(i, Math.min(i + CONFIG_IMPRESION.CHUNK_SIZE, bytes.length)) as unknown as Uint8Array;
+        const chunkNum = Math.floor(i / CONFIG_IMPRESION.CHUNK_SIZE) + 1;
+        
+        await impresora.flush(chunk);
+        
+        // Delay adicional cada N chunks para dar tiempo a procesar
+        if (chunkNum % CONFIG_IMPRESION.DELAY_CADA_N_CHUNKS === 0) {
+          await new Promise((r) => setTimeout(r, CONFIG_IMPRESION.DELAY_ENTRE_GRUPOS));
+          if (DEBUG.MOSTRAR_PROGRESO) {
+            console.log(`Progreso: ${chunkNum}/${totalChunks} chunks (${Math.round((chunkNum/totalChunks)*100)}%)`);
+          }
+        }
+      }
+
+      if (DEBUG.MOSTRAR_PROGRESO) {
+        console.log('✓ Imagen enviada completamente');
+      }
+
+      // 2) Esperar antes de enviar comandos finales
+      await new Promise((r) => setTimeout(r, CONFIG_IMPRESION.DELAY_ANTES_COMANDOS));
+
+      // 3) Enviar salto de línea
+      await impresora.flush(Uint8Array.from([0x0a]));
+
+      // 4) Esperar más tiempo
+      await new Promise((r) => setTimeout(r, CONFIG_IMPRESION.DELAY_DESPUES_SALTO));
+
+      // 5) Alimentar líneas y cortar
+      impresora.lineaVacia(CONFIG_IMPRESION.LINEAS_VACIAS_ANTES_CORTE);
       impresora.cut(false /* full cut */, 0);
-      await impresora.flush(); // envía feed + cut
-      await new Promise((r) => setTimeout(r, 50)); // opcional: deja respirar a la impresora
-      await impresora.desconectar(); // cierra conexión
-      // 🔹 Hasta aquí
-    } else {
-      console.error('No se conectó a la impresora');
+      await impresora.flush();
+
+      // 6) Esperar que termine todo el proceso
+      await new Promise((r) => setTimeout(r, CONFIG_IMPRESION.DELAY_ANTES_CORTAR));
+
+      // 7) Desconectar limpiamente
+      await impresora.desconectar();
+
+      console.log(`✓ Impresión completada: ${ancho}x${alto} - ${fecha}`);
+    } catch (errorImpresion) {
+      console.error('✗ Error durante la impresión:', errorImpresion);
+      try {
+        await impresora.desconectar();
+      } catch (e) {
+        console.error('Error cerrando conexión:', e);
+      }
+      throw errorImpresion;
     }
+    // 🔹 Hasta aquí
+
+    respuesta.send({ mensaje: 'Impresión exitosa', fecha });
   } catch (error) {
-    console.log(error);
+    console.error('Error en servidor:', error);
+    respuesta.code(500).send({ error: 'Error en la impresión', detalle: String(error) });
   }
-  respuesta.send({ mensaje: 'llegó diegui al servidor' });
 });
 
 aplicacion.listen({ port: puerto }, (error, direccion) => {

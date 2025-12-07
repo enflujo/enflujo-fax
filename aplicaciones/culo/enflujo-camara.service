@@ -1,0 +1,20 @@
+[Unit]
+Description=Enflujo FAX - Servidor de Streaming de Cámara
+After=network.target
+
+[Service]
+Type=simple
+User=enflujo
+WorkingDirectory=/home/enflujo/enflujo-fax/aplicaciones/culo/fuente
+ExecStart=/usr/bin/python3 /home/enflujo/enflujo-fax/aplicaciones/culo/fuente/camara.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+# Límites de recursos (opcional, para evitar que use demasiada memoria)
+MemoryLimit=256M
+CPUQuota=50%
+
+[Install]
+WantedBy=multi-user.target

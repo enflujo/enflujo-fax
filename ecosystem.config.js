@@ -15,7 +15,7 @@ module.exports = {
       max_memory_restart: '300M',
       out_file: '/home/enflujo/.pm2/logs/cara-out.log',
       error_file: '/home/enflujo/.pm2/logs/cara-err.log',
-      interpreter: '/home/enflujo/.nvm/versions/node/v24.11.0/bin/node',
+      interpreter: '/home/enflujo/.nvm/versions/node/v24.11.1/bin/node',
     },
     {
       name: 'culo',
@@ -29,7 +29,7 @@ module.exports = {
       env: { NODE_ENV: 'production' },
       out_file: '/home/enflujo/.pm2/logs/culo-out.log',
       error_file: '/home/enflujo/.pm2/logs/culo-err.log',
-      interpreter: '/home/enflujo/.nvm/versions/node/v24.11.0/bin/node',
+      interpreter: '/home/enflujo/.nvm/versions/node/v24.11.1/bin/node',
     },
   ],
 };

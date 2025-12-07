@@ -1,62 +1,28 @@
-import { Device, getDeviceList } from 'usb';
-import type { OutEndpoint } from 'usb';
-import { INTERFACES } from './constantes';
-import { platform } from 'os';
+import { SerialPort } from 'serialport';
+import PuertoSerie from './PuertoSerie';
+import { CONFIG_PUERTO_SERIAL } from './configuracion';
 
-export function buscarImpresora() {
-  const impresoras = getDeviceList().filter(({ configDescriptor }) => {
-    try {
-      const impresoras = configDescriptor?.interfaces.filter((interfaz) => {
-        return interfaz.filter(({ bInterfaceClass }) => bInterfaceClass === INTERFACES.IMPRESORA).length;
-      });
-
-      return impresoras?.length;
-    } catch (error) {
-      console.error(error);
-      throw new Error('No hay impresoras conectadas por USB.');
-    }
-  });
-
-  if (impresoras.length) return impresoras[0];
-  return null;
+/**
+ * Busca puertos seriales disponibles
+ * @returns {Promise<string[]>} Array con los puertos encontrados
+ */
+export async function buscarPuertosSerie(): Promise<string[]> {
+  try {
+    const puertos = await SerialPort.list();
+    return puertos.map((puerto) => puerto.path);
+  } catch (error) {
+    throw new Error(`Error al buscar puertos seriales: ${error}`);
+  }
 }
 
-export function conectar(impresora: Device): Promise<OutEndpoint | null> {
-  return new Promise((resolver, rechazar) => {
-    impresora.open();
-
-    impresora.interfaces?.forEach((interfaz) => {
-      interfaz.setAltSetting(interfaz.altSetting, () => {
-        try {
-          if ('win32' !== platform()) {
-            if (interfaz.isKernelDriverActive()) {
-              try {
-                interfaz.detachKernelDriver();
-              } catch (e) {
-                rechazar('No se puede reclamar interfaz de la imporesora.');
-                return;
-              }
-            }
-          }
-
-          interfaz.claim();
-
-          for (let i = 0; i < interfaz.endpoints.length; i++) {
-            const puntoConexion = interfaz.endpoints[i];
-
-            if (puntoConexion.direction == 'out') {
-              resolver(puntoConexion as OutEndpoint);
-              return;
-            }
-          }
-
-          rechazar('No se pudo conectar a la impresora.');
-        } catch (error) {
-          rechazar(error);
-        }
-      });
-    });
-  });
+/**
+ * Conecta al puerto serial configurado
+ * @returns {Promise<PuertoSerie>}
+ */
+export async function conectar(): Promise<PuertoSerie> {
+  const puertoSerie = new PuertoSerie(CONFIG_PUERTO_SERIAL);
+  await puertoSerie.iniciar();
+  return puertoSerie;
 }
 
 export function getParityBit(str: string) {

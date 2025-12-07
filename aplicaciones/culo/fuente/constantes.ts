@@ -1,12 +1,5 @@
 import { numToHexString } from './ayudas';
 
-export const INTERFACES = {
-  AUDIO: 0x01,
-  HID: 0x03,
-  IMPRESORA: 0x07,
-  HUB: 0x09,
-};
-
 export const ALINEACION = {
   /** Texto de izquierda a derecha */
   izquierda: '\x1b\x61\x00',

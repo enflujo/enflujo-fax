@@ -1,5 +1,3 @@
-import { DOS_PI } from './utilidades/constantes';
-
 export default class Pepa {
   x: number;
   y: number;
@@ -17,10 +15,16 @@ export default class Pepa {
 
   actualizar(ctx: CanvasRenderingContext2D) {
     const radio = this.radio;
+    const tam = radio * 2;
 
+    ctx.save();
+    ctx.translate(this.x, this.y);
     ctx.beginPath();
-    ctx.arc(this.x, this.y, radio, 0, DOS_PI);
+    ctx.moveTo(0, -tam * 0.35);
+    ctx.bezierCurveTo(tam, -tam, tam, tam * 0.6, 0, tam);
+    ctx.bezierCurveTo(-tam, tam * 0.6, -tam, -tam, 0, -tam * 0.35);
     ctx.fill();
+    ctx.restore();
 
     if (this.sentido > 0 && radio >= 7) {
       this.sentido = -1;
