@@ -23,39 +23,55 @@ export function buscarImpresora() {
 
 export function conectar(impresora: Device): Promise<OutEndpoint | null> {
   return new Promise((resolver, rechazar) => {
-    impresora.open();
+    const cerrarSeguro = () => {
+      try {
+        impresora.close();
+      } catch {
+        // El dispositivo puede haberse cerrado al fallar libusb.
+      }
+    };
 
-    impresora.interfaces?.forEach((interfaz) => {
-      interfaz.setAltSetting(interfaz.altSetting, () => {
-        try {
-          if ('win32' !== platform()) {
-            if (interfaz.isKernelDriverActive()) {
-              try {
-                interfaz.detachKernelDriver();
-              } catch (e) {
-                rechazar('No se puede reclamar interfaz de la imporesora.');
-                return;
-              }
-            }
-          }
+    try {
+      impresora.open();
+      const interfaz = impresora.interfaces?.find(
+        ({ descriptor }) => descriptor.bInterfaceClass === INTERFACES.IMPRESORA
+      );
+      if (!interfaz) {
+        cerrarSeguro();
+        throw new Error('No se encontró la interfaz USB de la impresora.');
+      }
 
-          interfaz.claim();
-
-          for (let i = 0; i < interfaz.endpoints.length; i++) {
-            const puntoConexion = interfaz.endpoints[i];
-
-            if (puntoConexion.direction == 'out') {
-              resolver(puntoConexion as OutEndpoint);
-              return;
-            }
-          }
-
-          rechazar('No se pudo conectar a la impresora.');
-        } catch (error) {
+      let reclamada = false;
+      try {
+        // libusb exige soltar el controlador antes de reclamar o cambiar la
+        // configuración. Para imprimir solo necesitamos la salida de la
+        // alternativa activa; setAltSetting aquí causaba LIBUSB_ERROR_NOT_FOUND.
+        if ('win32' !== platform() && interfaz.isKernelDriverActive()) interfaz.detachKernelDriver();
+        interfaz.claim();
+        reclamada = true;
+        const puntoConexion = interfaz.endpoints.find(({ direction }) => direction === 'out') as
+          | OutEndpoint
+          | undefined;
+        if (!puntoConexion) throw new Error('No se encontró una salida USB para la impresora.');
+        puntoConexion.timeout = 20_000;
+        resolver(puntoConexion);
+      } catch (error) {
+        const terminar = () => {
+          cerrarSeguro();
           rechazar(error);
-        }
-      });
-    });
+        };
+        if (reclamada) {
+          try {
+            interfaz.release(true, terminar);
+          } catch {
+            terminar();
+          }
+        } else terminar();
+      }
+    } catch (error) {
+      cerrarSeguro();
+      rechazar(error);
+    }
   });
 }
 

@@ -5,22 +5,30 @@ export default () => {
 
   buzon.onchange = async (evento) => {
     botonImprimir.classList.add('oculto');
+    document.body.dispatchEvent(new Event('pausarCamara'));
     const archivos = (evento.target as HTMLInputElement).files;
 
     if (archivos?.length) {
-      const lectorImg = new FileReader();
-
-      lectorImg.onload = () => {
-        if (lectorImg.result) {
-          const img = new Image();
-          img.onload = () => {
-            document.body.dispatchEvent(new CustomEvent('nuevaImagen', { detail: { img } }));
-          };
-          img.src = lectorImg.result as string;
-        }
+      const url = URL.createObjectURL(archivos[0]);
+      const img = new Image();
+      img.decoding = 'async';
+      img.onload = () => {
+        document.body.dispatchEvent(new CustomEvent('nuevaImagen', { detail: { img } }));
+        URL.revokeObjectURL(url);
+        img.onload = null;
+        img.onerror = null;
+        img.removeAttribute('src');
+        buzon.value = '';
+        document.body.dispatchEvent(new Event('reanudarCamara'));
       };
-      lectorImg.readAsDataURL(archivos[0]);
-    }
+      img.onerror = () => {
+        URL.revokeObjectURL(url);
+        buzon.value = '';
+        console.error('No se pudo abrir la imagen seleccionada');
+        document.body.dispatchEvent(new Event('reanudarCamara'));
+      };
+      img.src = url;
+    } else document.body.dispatchEvent(new Event('reanudarCamara'));
     lienzo.style.display = 'block';
   };
 };

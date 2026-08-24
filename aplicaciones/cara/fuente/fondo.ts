@@ -6,26 +6,32 @@ export default () => {
   const dims = { ancho: 0, alto: 0, columnas: 0, filas: 0 };
   const cuadro = 20;
   const radio = 5;
-  let reloj = 0;
   let cantidadPepas = 0;
+  let ultimoCuadro = 0;
 
   let pepas: Pepa[] = [];
 
   escalar();
   ciclo();
 
-  function ciclo() {
-    reloj = requestAnimationFrame(ciclo);
+  function ciclo(ahora = 0) {
+    requestAnimationFrame(ciclo);
+
+    // 30 FPS mantienen el movimiento fluido sin redibujar más de lo necesario.
+    if (document.hidden || ahora - ultimoCuadro < 1000 / 30) return;
+    ultimoCuadro = ahora;
 
     ctx.clearRect(0, 0, dims.ancho, dims.alto);
 
     if (pepas.length !== cantidadPepas) return;
+    ctx.beginPath();
     for (let fila = 0; fila < dims.filas; fila++) {
       for (let columna = 0; columna < dims.columnas; columna++) {
         const i = columna + fila * dims.columnas;
         pepas[i].actualizar(ctx);
       }
     }
+    ctx.fill();
   }
 
   function escalar() {

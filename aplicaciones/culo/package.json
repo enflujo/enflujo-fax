@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "ver": "nodemon ./fuente/culito.ts",
-    "armar": "esbuild ./fuente/culito.ts --bundle --minify --platform=node --outfile=publico/programa.js",
+    "armar": "esbuild ./fuente/culito.ts --bundle --minify --platform=node --packages=external --outfile=publico/programa.js",
     "prender": "node publico/programa.js"
   },
   "devDependencies": {

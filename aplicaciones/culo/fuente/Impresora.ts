@@ -162,23 +162,36 @@ export class Impresora {
    * @param  {[number]} feed Number of lines to feed before cutting
    * @return {[Printer]} printer  [the escpos printer instance]
    */
-  cut(partial = true, feed = 3) {
+  cut(partial = false, feed = 5) {
     this.lineaVacia(feed);
     this.buffer.write(PAPER[partial ? 'PAPER_PART_CUT' : 'PAPER_FULL_CUT']);
     return this;
   }
 
   async desconectar(datos?: Uint8Array): Promise<this> {
-    await this.flush(datos);
+    let errorTransferencia: unknown;
+    try {
+      await this.flush(datos);
+    } catch (error) {
+      errorTransferencia = error;
+    }
+
     return new Promise((resolve, reject) => {
-      if (!this.dispositivo) return;
-      try {
-        this.dispositivo.close();
-        this.conexion.removeAllListeners('detach');
-        resolve(this);
-      } catch (error) {
-        reject(error);
-      }
+      const interfaz = this.dispositivo.interfaces?.find(({ endpoints }) => endpoints.includes(this.conexion));
+      const cerrar = (error?: Error) => {
+        try {
+          this.dispositivo.close();
+        } catch (errorCierre) {
+          error ||= errorCierre as Error;
+        }
+
+        const errorFinal = errorTransferencia || error;
+        if (errorFinal) reject(errorFinal);
+        else resolve(this);
+      };
+
+      if (interfaz) interfaz.release(true, cerrar);
+      else cerrar();
     });
   }
 }

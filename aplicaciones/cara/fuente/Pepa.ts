@@ -18,9 +18,8 @@ export default class Pepa {
   actualizar(ctx: CanvasRenderingContext2D) {
     const radio = this.radio;
 
-    ctx.beginPath();
+    ctx.moveTo(this.x + radio, this.y);
     ctx.arc(this.x, this.y, radio, 0, DOS_PI);
-    ctx.fill();
 
     if (this.sentido > 0 && radio >= 7) {
       this.sentido = -1;

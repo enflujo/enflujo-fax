@@ -13,8 +13,8 @@
     "prender:servidor": "yarn workspace culo ver",
     "dev": "yarn workspace culo ver",
     "iniciar": "pm2 start ecosystem.config.js",
-    "reiniciar": "pm2 restart ecosystem.config.js",
-    "recargar": "pm2 reload ecosystem.config.js",
+    "reiniciar": "pm2 startOrRestart ecosystem.config.js --update-env",
+    "recargar": "pm2 startOrReload ecosystem.config.js --update-env",
     "detener": "pm2 stop ecosystem.config.js"
   },
   "devDependencies": {

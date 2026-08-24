@@ -6,12 +6,7 @@ export default () => {
   const ctx = lienzo.getContext('2d') as CanvasRenderingContext2D;
 
   const botonImprimir = document.getElementById('botonImprimir') as HTMLDivElement;
-  const contenedorTransmision = document.getElementById('contenedorTransmision') as HTMLDivElement;
-  const transmision = document.getElementById('transmision') as HTMLDivElement;
-  const fotomatica = document.getElementById('fotomatica') as HTMLDivElement;
-  const contenedorEditor = document.getElementById('contenedorEditor') as HTMLDivElement;
   const urlTally = import.meta.env.DEV ? 'http://localhost:4002' : 'https://fax-tally.enflujo.com';
-  let contadorImpresiones = 0;
 
   document.body.addEventListener('nuevaImagen', (evento: CustomEventInit<{ img: HTMLImageElement }>) => {
     if (!evento.detail) return;
@@ -68,30 +63,36 @@ export default () => {
     ctx.putImageData(imagenProcesada, 0, 0);
     fin(codificarImagenParaImpresora(imagenProcesada));
 
-    function fin(datosImagen?: number[]) {
-      contadorImpresiones = 0;
+    function fin(datosImagen?: Uint8Array) {
       botonImprimir.innerText = 'Imprimir';
       mostrarBotonImprimir();
 
       // Imprimir la imagen cuando se haga clic en el botón
-      botonImprimir.onclick = () => {
-        if (botonImprimir.innerText === 'Imprimir') {
-          transmitirImpresion();
+      botonImprimir.onclick = async () => {
+        if (botonImprimir.innerText !== 'Imprimir') return;
 
-          fetch('https://fax-tally.enflujo.com', {
+        transmitirImpresion();
+        const controlador = new AbortController();
+        const timeout = window.setTimeout(() => controlador.abort(), 30_000);
+
+        try {
+          if (!datosImagen) throw new Error('No hay una imagen lista para imprimir');
+          const respuesta = await fetch(urlTally, {
             method: 'POST',
-            headers: { 'Content-type': 'application/json' },
-            body: JSON.stringify({
-              img: datosImagen,
-              fecha: new Date(),
-              ancho: anchoImg,
-              alto: 384,
-            }),
-          }).then(() => {
-            ocultarImpresion();
+            headers: { 'Content-type': 'application/octet-stream' },
+            signal: controlador.signal,
+            body: datosImagen.buffer as ArrayBuffer,
           });
-        } else {
-          // ocultarImpresion();
+          if (!respuesta.ok) throw new Error(`El servidor de impresión respondió ${respuesta.status}`);
+          ocultarImpresion();
+        } catch (error) {
+          console.error('No se pudo imprimir:', error);
+          botonImprimir.innerText = 'Falló. Toca para reintentar';
+          window.setTimeout(() => {
+            botonImprimir.innerText = 'Imprimir';
+          }, 3000);
+        } finally {
+          window.clearTimeout(timeout);
         }
       };
     }
@@ -101,20 +102,10 @@ export default () => {
     }
 
     function transmitirImpresion() {
-      // fotomatica.classList.add('oculta');
-      // contenedorEditor.classList.add('oculto');
-      // contenedorTransmision.classList.add('transmitiendo');
-      // transmision.classList.add('transmitiendo');
       botonImprimir.innerText = 'Imprimiendo...';
-      // botonImprimir.onclick = () => {};
     }
 
     function ocultarImpresion() {
-      // fotomatica.classList.remove('oculta');
-      // contenedorEditor.classList.remove('oculto');
-      // contenedorTransmision.classList.remove('transmitiendo');
-      // transmision.classList.remove('transmitiendo');
-      // botonImprimir.classList.add('oculto');
       botonImprimir.innerText = 'Imprimir';
     }
   });
@@ -122,7 +113,13 @@ export default () => {
 
 function codificarImagenParaImpresora(imagen: ImageData) {
   const { width: ancho, height: alto } = imagen;
-  const datosImagen: number[] = [];
+  const bloques: Uint8Array[] = [];
+  let longitud = 0;
+
+  const agregar = (bloque: Uint8Array) => {
+    bloques.push(bloque);
+    longitud += bloque.byteLength;
+  };
 
   if (ancho % 8 !== 0) {
     throw new Error('El ancho tiene que ser múltipo de 8');
@@ -155,13 +152,21 @@ function codificarImagenParaImpresora(imagen: ImageData) {
     return respuesta;
   };
 
-  datosImagen.push(0x1b, 0x33, 0x24);
+  agregar(Uint8Array.of(0x1b, 0x33, 0x24));
 
   datosColumna(ancho, alto).forEach((bytes) => {
-    datosImagen.push(0x1b, 0x2a, 0x21, ancho & 0xff, (ancho >> 8) & 0xff, ...Array.from(bytes), 0x0a);
+    agregar(Uint8Array.of(0x1b, 0x2a, 0x21, ancho & 0xff, (ancho >> 8) & 0xff));
+    agregar(bytes);
+    agregar(Uint8Array.of(0x0a));
   });
 
-  datosImagen.push(0x1b, 0x32);
+  agregar(Uint8Array.of(0x1b, 0x32));
 
-  return datosImagen;
+  const resultado = new Uint8Array(longitud);
+  let posicion = 0;
+  for (const bloque of bloques) {
+    resultado.set(bloque, posicion);
+    posicion += bloque.byteLength;
+  }
+  return resultado;
 }

@@ -1,17 +1,26 @@
 module.exports = {
   apps: [
     {
-      name: 'cara',
-      script: 'serve',
-      env: {
-        PM2_SERVE_PATH: './aplicaciones/cara/publico',
-        PM2_SERVE_PORT: 4001,
-      },
+      name: 'culito',
+      script: './aplicaciones/culo/publico/programa.js',
+      interpreter: '/home/enflujo/.nvm/versions/node/v20.10.0/bin/node',
+      autorestart: true,
+      restart_delay: 2000,
+      max_memory_restart: '200M',
     },
 
     {
-      name: 'culo',
-      script: 'yarn prender:servidor',
+      name: 'camara',
+      script: './camara/camara.py',
+      interpreter: 'python3',
+      autorestart: true,
+      restart_delay: 3000,
+      max_memory_restart: '200M',
+      kill_timeout: 5000,
+      env: {
+        FPS_CAMARA: '8',
+        PUERTO_CAMARA: '4003',
+      },
     },
   ],
 };

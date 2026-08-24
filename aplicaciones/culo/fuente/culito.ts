@@ -20,15 +20,15 @@ export type TFoto = Static<typeof Foto>;
 const puerto = 4002;
 const aplicacion = fastify({
   bodyLimit: 30 * 1024 * 1024, // ampliar a 30mb
+  logger: true,
 }).withTypeProvider<TypeBoxTypeProvider>();
 
-const dispositivo = buscarImpresora();
+aplicacion.register(cors, { origin: true });
+aplicacion.addContentTypeParser('application/octet-stream', { parseAs: 'buffer' }, (_peticion, cuerpo, fin) => {
+  fin(null, cuerpo);
+});
 
-if (process.env.NODE_ENV !== 'produccion') {
-  aplicacion.register(cors);
-}
-
-aplicacion.post<{ Body: TFoto }>(
+aplicacion.post<{ Body: TFoto | Buffer }>(
   '/',
   // {
   //   schema: {
@@ -37,9 +37,13 @@ aplicacion.post<{ Body: TFoto }>(
   // },
   async (peticion, respuesta) => {
     try {
-      const { img, fecha, ancho, alto } = peticion.body;
+      const img = Buffer.isBuffer(peticion.body) ? peticion.body : Buffer.from(peticion.body.img);
+      if (!img.length) {
+        respuesta.code(400).send({ mensaje: 'La imagen está vacía' });
+        return;
+      }
+      const dispositivo = buscarImpresora();
       if (dispositivo) {
-        console.log(typeof img);
         const conexion = await conectar(dispositivo);
         if (!conexion) throw new Error('No se pudo conectar la impresora');
         const impresora = new Impresora(dispositivo, conexion, { encoding: 'Cp858' });
@@ -49,12 +53,15 @@ aplicacion.post<{ Body: TFoto }>(
         impresora.cut();
         await impresora.desconectar();
       } else {
-        console.error('No se conectó a la impresora');
+        respuesta.code(503).send({ mensaje: 'No se encontró una impresora conectada' });
+        return;
       }
     } catch (error) {
-      console.log(error);
+      aplicacion.log.error(error);
+      respuesta.code(500).send({ mensaje: 'No se pudo completar la impresión' });
+      return;
     }
-    respuesta.send({ mensaje: 'llegó diegui al servidor' });
+    respuesta.send({ mensaje: 'Impresión completada' });
   }
 );
 

@@ -120,192 +120,61 @@ h1 {
     'YSWP' 0;
   font-palette: --bn;
 
-  transition: all 0.5s ease 0s;
+  transform-origin: center;
+  transition: transform 0.5s ease;
 
   &:hover {
-    font-variation-settings:
-      'SIZE' 70,
-      'OVAL' 40,
-      'QUAD' 100,
-      'SPRK' 0,
-      'XSWP' 0,
-      'YSWP' 0;
     font-palette: --bn2;
+    transform: scale(1.03) rotate(-0.5deg);
   }
 
-  .letra1 {
-    animation: imprimeLetra1 8s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
-    @keyframes imprimeLetra1 {
-      0% {
-        font-variation-settings:
-          'SIZE' 0,
-          'OVAL' 40;
-      }
-
-      12% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-
-      35% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-
-      80% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-
-      100% {
-        font-variation-settings:
-          'SIZE' 0,
-          'OVAL' 40;
-      }
-    }
+  .letra1,
+  .letra2,
+  .letra3,
+  .letra4 {
+    display: inline-block;
+    transform-origin: center bottom;
+    animation: imprimeLetra 8s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
   }
 
   .letra2 {
-    animation: imprimeLetra2 8s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
-    @keyframes imprimeLetra2 {
-      0% {
-        font-variation-settings:
-          'SIZE' 0,
-          'OVAL' 40;
-      }
-
-      22% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-
-      35% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-
-      80% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-      100% {
-        font-variation-settings:
-          'SIZE' 0,
-          'OVAL' 40;
-      }
-    }
+    animation-delay: -0.8s;
   }
 
   .letra3 {
-    animation: imprimeLetra3 8s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
-    @keyframes imprimeLetra3 {
-      0% {
-        font-variation-settings:
-          'SIZE' 0,
-          'OVAL' 40;
-      }
-
-      32% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-
-      45% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-
-      80% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-      100% {
-        font-variation-settings:
-          'SIZE' 0,
-          'OVAL' 40;
-      }
-    }
+    animation-delay: -1.6s;
   }
 
   .letra4 {
-    animation: imprimeLetra4 8s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
-    @keyframes imprimeLetra4 {
-      0% {
-        font-variation-settings:
-          'SIZE' 0,
-          'OVAL' 40;
-      }
-
-      35% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-
-      50% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-
-      80% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40;
-      }
-      100% {
-        font-variation-settings:
-          'SIZE' 0,
-          'OVAL' 40;
-      }
-    }
+    animation-delay: -2.4s;
   }
 
   .palabra2 {
-    animation: imprime2 4s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
-    @keyframes imprime2 {
-      0% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 0,
-          'YSWP' 50;
-      }
+    display: inline-block;
+    animation: imprimePalabra 4s infinite ease-in-out;
+  }
 
-      25% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40,
-          'YSWP' 0;
-      }
+  @keyframes imprimeLetra {
+    0%,
+    100% {
+      transform: translateY(0.08em) scale(0.92, 0.88);
+    }
 
-      35% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40,
-          'YSWP' 0;
-      }
-      95% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40,
-          'YSWP' 0;
-      }
+    35%,
+    80% {
+      transform: translateY(0) scale(1, 1);
+    }
+  }
 
-      100% {
-        font-variation-settings:
-          'SIZE' 90,
-          'OVAL' 40,
-          'YSWP' -50;
-      }
+  @keyframes imprimePalabra {
+    0%,
+    100% {
+      transform: translateX(-0.03em) scaleX(0.97);
+    }
+
+    35%,
+    80% {
+      transform: translateX(0) scaleX(1);
     }
   }
 }
@@ -413,13 +282,38 @@ h1 {
   width: 100vw;
   margin: 0 auto;
   padding: 0vw 0vw;
+  min-height: 8em;
+  background: #111;
+  position: relative;
   // position: fixed;
   top: 0px;
 
   #transmision {
     width: 100vw;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: contain;
+    display: block;
+
+    &.sinSenal {
+      opacity: 0.35;
+    }
+
     &.transmitiendo {
       width: 50vw;
+    }
+  }
+
+  #estadoCamara {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: white;
+    font-weight: bold;
+
+    &.oculto {
+      display: none;
     }
   }
 
@@ -494,17 +388,9 @@ h1 {
       'YSWP' 0;
 
     font-palette: --bn;
-    transition: all 0.5s ease 0s;
+    transition: transform 0.5s ease;
 
     &:hover {
-      font-variation-settings:
-        'SIZE' 70,
-        'OVAL' 40,
-        'QUAD' 100,
-        'SPRK' 0,
-        'XSWP' 0,
-        'YSWP' 0;
-
       font-palette: --bn2;
     }
   }

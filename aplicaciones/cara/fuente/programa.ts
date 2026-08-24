@@ -1,8 +1,10 @@
 import './scss/estilos.scss';
 import buzon from './buzon';
-import fondo from './fondo';
 import editorFoto from './editorFoto';
+import camara from './camara';
+import fondo from './fondo';
 
-fondo();
 buzon();
 editorFoto();
+camara();
+fondo();
