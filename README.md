@@ -11,8 +11,21 @@
 Nginx sirve `aplicaciones/cara/publico` en el puerto 4001. PM2 administra dos procesos: `culito` (impresora) y
 `camara`.
 
+El proyecto usa Node 24 LTS y Yarn 4. La versión exacta de Yarn está fijada en `package.json` mediante Corepack.
+
 ```sh
+corepack enable
+yarn install --immutable
+```
+
+Antes de desplegar, comprobar tipos, formato y compilación:
+
+```sh
+yarn revisar
 yarn armar
+```
+
+```sh
 yarn reiniciar
 pm2 save
 ```

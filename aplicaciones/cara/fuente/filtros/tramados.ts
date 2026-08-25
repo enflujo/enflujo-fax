@@ -39,8 +39,8 @@ export function grises(imagen: ImageData) {
 }
 
 export function atkinson(imagen: ImageData) {
-  const { data: pixeles, width: ancho } = imagen;
-  const luminancias = new Uint8ClampedArray(imagen.width * imagen.height);
+  const { data: pixeles, width: ancho, height: alto } = imagen;
+  const luminancias = new Float32Array(ancho * alto);
 
   // Convertir en grises
   for (let l = 0, i = 0; i < pixeles.length; l++, i += 4) {
@@ -48,20 +48,28 @@ export function atkinson(imagen: ImageData) {
   }
 
   // El algoritmo de Bill Atkinson: https://en.wikipedia.org/wiki/Bill_Atkinson
-  for (let l = 0, i = 0; i < pixeles.length; l++, i += 4) {
-    const valor = luminancias[l] < 129 ? 0 : 255;
-    const error = Math.floor((luminancias[l] - valor) / 8);
-    pixeles.fill(valor, i, i + 3);
+  for (let y = 0; y < alto; y++) {
+    for (let x = 0; x < ancho; x++) {
+      const l = y * ancho + x;
+      const i = l * 4;
+      const valor = luminancias[l] < 129 ? 0 : 255;
+      const error = (luminancias[l] - valor) / 8;
+      pixeles.fill(valor, i, i + 3);
 
-    luminancias[l + 1] += error;
-    luminancias[l + 2] += error;
-    luminancias[l + ancho - 1] += error;
-    luminancias[l + ancho] += error;
-    luminancias[l + ancho + 1] += error;
-    luminancias[l + 2 * ancho] += error;
+      difundir(x + 1, y, error);
+      difundir(x + 2, y, error);
+      difundir(x - 1, y + 1, error);
+      difundir(x, y + 1, error);
+      difundir(x + 1, y + 1, error);
+      difundir(x, y + 2, error);
+    }
   }
 
   return imagen;
+
+  function difundir(x: number, y: number, error: number) {
+    if (x >= 0 && x < ancho && y >= 0 && y < alto) luminancias[y * ancho + x] += error;
+  }
 }
 
 export function bayer(imagen: ImageData, limite: number) {

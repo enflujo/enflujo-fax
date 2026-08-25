@@ -10,6 +10,9 @@
   "scripts": {
     "prender": "concurrently \"yarn workspace cara ver\" \"yarn workspace culo ver\"",
     "armar": "yarn workspace cara armar && yarn workspace culo armar",
+    "revisar": "yarn revisar:formato && yarn revisar:tipos",
+    "revisar:formato": "prettier --check .",
+    "revisar:tipos": "yarn workspace cara revisar:tipos && yarn workspace culo revisar:tipos",
     "prender:servidor": "yarn workspace culo ver",
     "dev": "yarn workspace culo ver",
     "iniciar": "pm2 start ecosystem.config.js",
@@ -18,7 +21,12 @@
     "detener": "pm2 stop ecosystem.config.js"
   },
   "devDependencies": {
-    "concurrently": "^8.2.2",
-    "prettier": "^3.3.3"
+    "concurrently": "^10.0.5",
+    "prettier": "^3.9.6",
+    "typescript": "^7.0.2"
+  },
+  "packageManager": "yarn@4.18.0",
+  "engines": {
+    "node": ">=24 <25"
   }
 }

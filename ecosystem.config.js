@@ -3,7 +3,7 @@ module.exports = {
     {
       name: 'culito',
       script: './aplicaciones/culo/publico/programa.js',
-      interpreter: '/home/enflujo/.nvm/versions/node/v20.10.0/bin/node',
+      interpreter: '/home/enflujo/.nvm/versions/node/v24.15.0/bin/node',
       autorestart: true,
       restart_delay: 2000,
       max_memory_restart: '200M',

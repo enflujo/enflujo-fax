@@ -8,21 +8,26 @@ export default () => {
   const radio = 5;
   let cantidadPepas = 0;
   let ultimoCuadro = 0;
+  const reducirMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   let pepas: Pepa[] = [];
 
   escalar();
-  ciclo();
+  if (reducirMovimiento) dibujar();
+  else requestAnimationFrame(ciclo);
 
-  function ciclo(ahora = 0) {
+  function ciclo(ahora: number) {
     requestAnimationFrame(ciclo);
 
     // 30 FPS mantienen el movimiento fluido sin redibujar más de lo necesario.
     if (document.hidden || ahora - ultimoCuadro < 1000 / 30) return;
     ultimoCuadro = ahora;
 
-    ctx.clearRect(0, 0, dims.ancho, dims.alto);
+    dibujar();
+  }
 
+  function dibujar() {
+    ctx.clearRect(0, 0, dims.ancho, dims.alto);
     if (pepas.length !== cantidadPepas) return;
     ctx.beginPath();
     for (let fila = 0; fila < dims.filas; fila++) {
@@ -48,6 +53,8 @@ export default () => {
         pepas.push(new Pepa(columna * cuadro, fila * cuadro, Math.random() * radio));
       }
     }
+
+    if (reducirMovimiento) dibujar();
   }
 
   window.addEventListener('resize', escalar);

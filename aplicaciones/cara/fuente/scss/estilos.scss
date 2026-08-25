@@ -1,9 +1,7 @@
-@import './constantes';
+@use './constantes' as *;
 
 @font-face {
-  src:
-    url('/fuente/fuentes/LabDJRColorVariable[SIZE,BEVL,OVAL,SPRK,QUAD,XSWP,YSWP].woff2') format('woff2'),
-    url('/fuentes/LabDJRColorVariable[SIZE,BEVL,OVAL,SPRK,QUAD,XSWP,YSWP].woff') format('woff');
+  src: url('../fuentes/LabDJRColorVariable[SIZE,BEVL,OVAL,SPRK,QUAD,XSWP,YSWP].woff2') format('woff2');
   font-family: 'Lab DJR Web';
   font-style: normal;
   font-weight: normal;
@@ -38,6 +36,32 @@
     5 #000000,
     6 #000000,
     7 #ff006e;
+}
+
+@font-palette-values --rojosA {
+  font-family: 'Lab DJR Web';
+  override-colors:
+    0 #000000,
+    1 #ff006e,
+    2 #000000,
+    3 #ff006e,
+    4 #000000,
+    5 #000000,
+    6 #000000,
+    7 #ff006e;
+}
+
+@font-palette-values --rojosB {
+  font-family: 'Lab DJR Web';
+  override-colors:
+    0 #000000,
+    1 #000000,
+    2 #ff006e,
+    3 #000000,
+    4 #ff006e,
+    5 #000000,
+    6 #ff006e,
+    7 #000000;
 }
 
 @font-palette-values --colorines {
@@ -78,6 +102,12 @@ body {
   font-family: 'Satoshi', sans-serif;
   color: rgb(0, 0, 0);
   font-weight: 500;
+  min-height: 100%;
+  overflow-x: clip;
+}
+
+.oculto {
+  display: none !important;
 }
 
 .marco {
@@ -98,84 +128,88 @@ header {
   }
 }
 
-#contenedorProceso {
-  // position: fixed;
-  // top: 50%;
-  // transform: translateY(-50%);
+#contenedor {
   width: 100%;
+}
+
+#contenedorProceso {
+  width: min(95vw, 48rem);
+  margin: 0 auto;
 }
 
 h1 {
   font-family: 'Lab DJR Web';
-  font-size: 2em;
-  padding: 0.5em 0em 0.1em 0em;
+  font-size: clamp(2rem, 8vw, 5.5rem);
+  line-height: 1.05;
+  padding: clamp(0.5em, 5vw, 1em) 0.5em 0.1em;
   margin: 0;
 
   font-variation-settings:
-    'SIZE' 0,
-    'OVAL' 0,
-    'QUAD' 0,
+    'SIZE' 75,
+    'OVAL' 100,
+    'QUAD' 100,
     'SPRK' 0,
     'XSWP' 0,
     'YSWP' 0;
   font-palette: --bn;
 
-  transform-origin: center;
-  transition: transform 0.5s ease;
+  .puntoFuente {
+    font-palette: --bn;
+    animation: puntoRecorrido 33s steps(1, end) infinite;
+    animation-delay: var(--espera);
+  }
 
-  &:hover {
+  &:hover .puntoFuente {
+    animation: puntosVivos 1.1s steps(1, end) infinite;
+  }
+}
+
+@keyframes puntoRecorrido {
+  0%,
+  1.4% {
     font-palette: --bn2;
-    transform: scale(1.03) rotate(-0.5deg);
   }
 
-  .letra1,
-  .letra2,
-  .letra3,
-  .letra4 {
-    display: inline-block;
-    transform-origin: center bottom;
-    animation: imprimeLetra 8s infinite cubic-bezier(0.01, 0.8, 1, 0.7);
+  1.5%,
+  2.9% {
+    font-palette: --bn;
   }
 
-  .letra2 {
-    animation-delay: -0.8s;
+  3%,
+  4.4% {
+    font-palette: --bn2;
   }
 
-  .letra3 {
-    animation-delay: -1.6s;
+  4.5%,
+  5.9% {
+    font-palette: --bn;
   }
 
-  .letra4 {
-    animation-delay: -2.4s;
+  6%,
+  7.4% {
+    font-palette: --bn2;
   }
 
-  .palabra2 {
-    display: inline-block;
-    animation: imprimePalabra 4s infinite ease-in-out;
+  7.5%,
+  100% {
+    font-palette: --bn;
+  }
+}
+
+@keyframes puntosVivos {
+  0%,
+  32% {
+    font-palette: --rojosA;
   }
 
-  @keyframes imprimeLetra {
-    0%,
-    100% {
-      transform: translateY(0.08em) scale(0.92, 0.88);
-    }
-
-    35%,
-    80% {
-      transform: translateY(0) scale(1, 1);
-    }
+  33%,
+  65% {
+    font-palette: --rojosB;
   }
 
-  @keyframes imprimePalabra {
-    0%,
-    100% {
-      transform: translateX(-0.03em) scaleX(0.97);
-    }
-
-    35%,
-    80% {
-      transform: translateX(0) scaleX(1);
-    }
+  66%,
+  100% {
+    font-palette: --bn2;
   }
 }
 
@@ -188,15 +222,25 @@ h1 {
   background-color: #ffefed68;
   border: 5px dotted;
   padding: 2em;
-  width: 95vw;
+  width: min(95vw, 48rem);
   text-align: center;
   margin: 0 auto;
   display: block;
 
   .mensajeBuzon {
     width: 100%;
-    height: 100%;
-    display: block;
+    min-height: 6rem;
+    display: grid;
+    place-content: center;
+    gap: 0.35rem;
+    cursor: pointer;
+    font-size: clamp(1.15rem, 4vw, 1.6rem);
+
+    .ayudaBuzon {
+      font-size: 0.8em;
+      font-weight: 500;
+      opacity: 0.7;
+    }
   }
 
   &.oculta {
@@ -204,10 +248,21 @@ h1 {
   }
 }
 
-#buzon {
+.entradaArchivo {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
   border: 0;
-  padding: 2em 0em 1em 0em;
-  width: 90%;
+}
+
+#fotomatica:focus-within {
+  outline: 4px dotted currentColor;
+  outline-offset: 4px;
 }
 
 #fondo {
@@ -227,6 +282,14 @@ h1 {
   background-color: var(--fondoTransparentoso);
   display: none;
   margin: 0 auto;
+
+  &.visible {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 100%;
+    max-height: 75svh;
+  }
 }
 
 #contenedorImpresora {
@@ -242,10 +305,17 @@ h1 {
 }
 
 #contenedorEditor {
-  width: 95vw;
+  width: min(95vw, 48rem);
   margin: 2em auto 3em auto;
   background-color: #c86bfa;
-  display: block;
+  padding: clamp(0.5rem, 2vw, 1rem);
+  display: none;
+  place-items: center;
+  overflow: hidden;
+
+  &:has(#lienzo.visible) {
+    display: grid;
+  }
 
   &.oculto {
     display: none;
@@ -279,17 +349,13 @@ h1 {
 }
 
 #contenedorTransmision {
-  width: 100vw;
+  width: 100%;
   margin: 0 auto;
-  padding: 0vw 0vw;
-  min-height: 8em;
   background: #111;
   position: relative;
-  // position: fixed;
-  top: 0px;
 
   #transmision {
-    width: 100vw;
+    width: 100%;
     height: auto;
     aspect-ratio: 4 / 3;
     object-fit: contain;
@@ -297,10 +363,6 @@ h1 {
 
     &.sinSenal {
       opacity: 0.35;
-    }
-
-    &.transmitiendo {
-      width: 50vw;
     }
   }
 
@@ -317,15 +379,30 @@ h1 {
     }
   }
 
-  &.transmitiendo {
-    width: 50vw;
-    position: unset;
+  .senalEnVivo {
+    position: absolute;
+    top: 0.65rem;
+    left: 0.65rem;
+    padding: 0.25rem 0.5rem;
+    color: #fff;
+    background: #000b;
+    font-size: 0.8rem;
+    font-weight: 700;
+
+    &::before {
+      content: '';
+      display: inline-block;
+      width: 0.65em;
+      height: 0.65em;
+      margin-right: 0.4em;
+      border-radius: 50%;
+      background: #ff6666;
+    }
   }
 }
 
 #botonImprimir {
-  // margin: 1em auto;
-  width: fit-content;
+  border: 0;
   background-color: #ff6666cb;
   padding: 0.5em;
   width: 100%;
@@ -334,51 +411,139 @@ h1 {
   display: block;
   font-weight: bold;
   font-size: 2em;
+  font-family: inherit;
+
+  &:focus-visible {
+    outline: 4px dotted currentColor;
+    outline-offset: 3px;
+  }
+
+  &:disabled {
+    cursor: wait;
+    opacity: 0.75;
+  }
 
   &.oculto {
     display: none;
   }
+}
 
-  // &:hover {
-  //   background-color: #57e2e5;
-  // }
+.cambiarFoto {
+  display: none;
+}
+
+#estadoProceso {
+  min-height: 1.5em;
+  margin: 0.6rem 0;
+  text-align: center;
+
+  &:empty {
+    display: none;
+  }
+}
+
+body.fotoLista {
+  background-color: #f0f041;
+
+  #fotomatica {
+    display: none;
+  }
+
+  header {
+    margin: 0;
+
+    h1 {
+      padding: 0.3em 0.5em 0.15em;
+      font-size: clamp(2rem, 6vw, 4.25rem);
+    }
+  }
+
+  #contenedor {
+    width: min(100%, 80rem);
+    min-height: calc(100svh - clamp(3.5rem, 10vw, 6rem));
+    margin: 0 auto;
+    padding: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right))
+      max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+    display: grid;
+    grid-template-columns: minmax(7rem, 0.38fr) minmax(0, 1fr);
+    grid-template-areas:
+      'camara camara'
+      'editor proceso';
+    gap: clamp(0.65rem, 2vw, 1.25rem);
+    align-content: start;
+  }
+
+  #contenedorTransmision {
+    grid-area: camara;
+    width: min(100%, 38rem);
+    margin: 0 auto;
+    border: 5px dotted #000;
+  }
+
+  #contenedorEditor {
+    grid-area: editor;
+    width: 100%;
+    max-height: 27svh;
+    margin: 0;
+    padding: clamp(0.35rem, 1vw, 0.75rem);
+
+    #lienzo.visible {
+      max-height: calc(27svh - 1.5rem);
+    }
+  }
+
+  #contenedorProceso {
+    grid-area: proceso;
+    width: 100%;
+    margin: 0;
+    padding: clamp(0.65rem, 2vw, 1.25rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: stretch;
+    background-color: #ffefeddd;
+    border: 5px dotted #000;
+  }
+
+  #estadoProceso {
+    margin: 0 0 0.65rem;
+    font-size: clamp(0.85rem, 2.5vw, 1rem);
+  }
+
+  .cambiarFoto {
+    display: block;
+    width: fit-content;
+    margin-top: 0.75rem;
+    margin-inline: auto;
+    padding: 0;
+    border: 0;
+    color: inherit;
+    background: transparent;
+    font: inherit;
+    text-align: center;
+    text-decoration: underline;
+    cursor: pointer;
+
+    &:focus-visible {
+      outline: 4px dotted currentColor;
+      outline-offset: 3px;
+    }
+  }
 }
 
 @media screen and (min-width: $corte1) {
   #contenedorTransmision {
-    width: 60vw;
+    width: min(75vw, 36rem);
     margin: 0 auto;
-    padding: 0vw 20vw;
-    top: 0px;
 
     #transmision {
-      width: 60vw;
-
-      &.transmitiendo {
-        width: 50vw;
-      }
+      width: 100%;
     }
-
-    &.transmitiendo {
-      width: 50vw;
-      position: unset;
-    }
-  }
-
-  #buzon {
-    border: 0;
-    padding: 2em 2em 1em 0em;
-    width: 60%;
   }
 }
 
 @media screen and (min-width: $corte2) {
   h1 {
-    font-family: 'Lab DJR Web';
-    font-size: 5.5em;
-    padding: 1em 0.5em 0.1em 0.5em;
-    margin: 0;
-
     font-variation-settings:
       'SIZE' 90,
       'OVAL' 60,
@@ -388,50 +553,64 @@ h1 {
       'YSWP' 0;
 
     font-palette: --bn;
-    transition: transform 0.5s ease;
 
     &:hover {
       font-palette: --bn2;
     }
   }
 
-  #buzon {
-    border: 0;
-    padding: 2em 1em 1em 1em;
-    width: auto;
-  }
-
   #fotomatica {
-    width: 60vw;
+    width: min(70vw, 48rem);
   }
 
   #contenedorTransmision {
-    width: 300px;
+    width: min(55vw, 32rem);
     margin: 0 auto;
-    padding: 0vw;
-    position: fixed;
-    top: 15px;
-    right: 10px;
 
     #transmision {
-      width: 300px;
-      &.transmitiendo {
-        width: 50vw;
-      }
+      width: 100%;
+    }
+  }
+
+  body.fotoLista {
+    #contenedor {
+      grid-template-columns: minmax(0, 1.7fr) minmax(18rem, 0.8fr);
+      grid-template-areas:
+        'camara editor'
+        'camara proceso';
     }
 
-    &.transmitiendo {
-      width: 50vw;
-      position: unset;
+    #contenedorTransmision {
+      width: 100%;
+      max-width: 48rem;
+      align-self: center;
+    }
+
+    #contenedorEditor {
+      max-height: 40svh;
+
+      #lienzo.visible {
+        max-height: calc(40svh - 2rem);
+      }
     }
   }
 }
 
-@media screen and (min-width: $corte3) {
-  h1 {
-    font-family: 'Lab DJR Web';
-    font-size: 5.5em;
-    padding: 1em 0.5em 0.1em 0.5em;
-    margin: 0;
+@media screen and (min-width: $corte4) {
+  #contenedorTransmision {
+    width: min(55vw, 36rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  h1 .puntoFuente,
+  h1:hover .puntoFuente {
+    animation: none;
+    transition: none;
+  }
+
+  h1 .puntoInicial,
+  h1:hover .puntoInicial {
+    font-palette: --bn2;
   }
 }

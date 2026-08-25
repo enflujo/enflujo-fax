@@ -1,5 +1,8 @@
 name: Estilo Código
 
+permissions:
+  contents: read
+
 on:
   push:
     branches:
@@ -14,18 +17,23 @@ jobs:
 
     steps:
       - name: 🐯 Obtener código del repositorio
-        uses: actions/checkout@v3
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: 🐝 Usar Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: 'lts/*'
+          node-version: 24
+
+      - name: 🧶 Activar Yarn
+        run: corepack enable
 
       - name: 🦒 Instalar dependencias
-        run: |
-          yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: 👀 Buscar errores
-        run: yarn lint
+        run: yarn revisar
+
+      - name: 🧱 Comprobar compilación
+        run: yarn armar

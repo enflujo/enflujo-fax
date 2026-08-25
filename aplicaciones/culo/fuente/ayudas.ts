@@ -50,8 +50,7 @@ export function conectar(impresora: Device): Promise<OutEndpoint | null> {
         interfaz.claim();
         reclamada = true;
         const puntoConexion = interfaz.endpoints.find(({ direction }) => direction === 'out') as
-          | OutEndpoint
-          | undefined;
+          OutEndpoint | undefined;
         if (!puntoConexion) throw new Error('No se encontró una salida USB para la impresora.');
         puntoConexion.timeout = 20_000;
         resolver(puntoConexion);
